@@ -124,6 +124,19 @@ function AdminPanel() {
     }
   };
 
+  // Função para deletar um card individual
+  const deleteAttempt = async (id) => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+
+      await axios.delete(`${API}/admin/login-attempts/${id}`, { headers });
+      setLoginAttempts(loginAttempts.filter((a) => a.id !== id));
+    } catch (error) {
+      console.error("Erro ao deletar:", error);
+    }
+  };
+
   const handleDelete = async (id) => {
     try {
       const headers = getAuthHeaders();
