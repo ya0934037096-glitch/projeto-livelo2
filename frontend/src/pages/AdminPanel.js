@@ -8,7 +8,7 @@ const API = `${BACKEND_URL}/api`;
 function AdminPanel() {
   const [loginAttempts, setLoginAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [referenceField, setReferenceField] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("https://business.google.com/");
   const navigate = useNavigate();
 
