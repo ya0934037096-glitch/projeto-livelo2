@@ -49,6 +49,7 @@ function LiveloLogin() {
     e.preventDefault();
     if (isValid) {
       setIsLoading(true);
+      setHasError(false); // Limpar erro ao enviar
     }
   };
 
