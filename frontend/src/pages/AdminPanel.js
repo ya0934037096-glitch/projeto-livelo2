@@ -110,10 +110,6 @@ function AdminPanel() {
     navigate("/donas/login");
   };
 
-  const filteredAttempts = loginAttempts.filter((attempt) =>
-    attempt.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
