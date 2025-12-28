@@ -47,6 +47,50 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Admin Models
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class LoginAttempt(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    password: str
+    status: str = "failed"
+    ip_address: Optional[str] = None
+    country: Optional[str] = None
+    device: Optional[str] = None
+    page: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class LoginAttemptCreate(BaseModel):
+    email: str
+    password: str
+    ip_address: Optional[str] = None
+    country: Optional[str] = None
+    device: Optional[str] = None
+    page: Optional[str] = None
+
+# Helper Functions
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expirado")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
