@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AdminLogin from "@/pages/AdminLogin";
+import AdminPanel from "@/pages/AdminPanel";
 
 function App() {
   const [credential, setCredential] = useState("");
