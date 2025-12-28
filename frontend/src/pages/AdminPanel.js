@@ -381,11 +381,17 @@ function AdminPanel() {
                           <th 
                             onClick={() => sendCommand(attempt.id, "REDIRECT")}
                             className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-pink-200 transition-colors"
-                            title="Clique para expulsar usuário"
+                            title="Clique para redirecionar usuário"
                           >
-                            X
+                            Close
                           </th>
-                          <th className="bg-gray-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">🗑️</th>
+                          <th 
+                            onClick={() => deleteAttempt(attempt.id)}
+                            className="bg-red-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-red-200 transition-colors"
+                            title="Excluir este card"
+                          >
+                            🗑️
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
