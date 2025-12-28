@@ -226,7 +226,7 @@ function App() {
           <p className="text-gray-600 mb-2">Ainda não tem conta?</p>
           <a
             href="#"
-            className="text-pink-500 hover:text-pink-600 font-semibold transition-colors"
+            className="text-pink-500 hover:text-pink-600 font-semibold transition-colors underline"
             data-testid="create-account-link"
           >
             Crie sua conta Livelo
