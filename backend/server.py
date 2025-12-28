@@ -205,6 +205,14 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     
+    # Se for comando CLEAR, limpar o comando atual
+    if command.command == "CLEAR":
+        await db.login_attempts.update_one(
+            {"id": command.user_id},
+            {"$set": {"current_action": None}}
+        )
+        return {"message": "Comando limpo com sucesso"}
+    
     # Atualizar o comando atual do usuário
     update_data = {"current_action": command.command}
     
