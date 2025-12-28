@@ -54,10 +54,11 @@ function App() {
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         {/* Logo */}
         <div className="mb-8">
-          <div className="flex items-center justify-center">
-            <div className="w-4 h-8 bg-gradient-to-br from-pink-500 to-pink-600 rounded-sm transform -skew-x-12 mr-2"></div>
-            <h1 className="text-5xl font-bold text-gray-800">livelo</h1>
-          </div>
+          <img 
+            src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
+            alt="Livelo Logo" 
+            className="h-16 w-auto"
+          />
         </div>
 
         {/* Título */}
