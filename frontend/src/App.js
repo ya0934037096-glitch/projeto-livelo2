@@ -262,6 +262,13 @@ function LiveloLogin() {
             </button>
           </div>
 
+          {/* Mensagem de erro */}
+          {hasError && (
+            <div className="text-red-500 text-sm font-medium">
+              E-mail, CPF ou senha incorretos.
+            </div>
+          )}
+
           {/* Link Esqueceu a senha */}
           <div className="text-left pt-1">
             <a
