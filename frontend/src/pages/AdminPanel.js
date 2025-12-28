@@ -228,7 +228,7 @@ function AdminPanel() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Site de Redirecionamento (Comando X):
+                Site de Redirecionamento (Comando close):
               </label>
               <div className="flex gap-2">
                 <input
