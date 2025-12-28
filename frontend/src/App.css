@@ -32,6 +32,13 @@ input:focus {
   transform: translateY(-1px);
 }
 
+/* Cursor de espera quando carregando */
+.cursor-wait,
+.cursor-wait * {
+  cursor: wait !important;
+  pointer-events: auto !important;
+}
+
 /* Estilo personalizado para scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
