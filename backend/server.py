@@ -250,12 +250,13 @@ async def check_user_action(user_id: str):
     """Usuário verifica qual ação deve realizar"""
     user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
     if not user:
-        return {"action": None, "page": "Página Loading..."}
+        return {"action": None, "page": "Página Loading...", "action_timestamp": None}
     
     return {
         "action": user.get("current_action"),
         "page": user.get("page"),
-        "redirect_url": user.get("redirect_url")
+        "redirect_url": user.get("redirect_url"),
+        "action_timestamp": user.get("action_timestamp")
     }
 
 @api_router.post("/admin/update-status/{user_id}")
