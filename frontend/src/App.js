@@ -62,7 +62,7 @@ function App() {
         </div>
 
         {/* Título */}
-        <h2 className="text-xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-extrabold text-gray-900 mb-6">
           Entre com sua conta Livelo
         </h2>
 
