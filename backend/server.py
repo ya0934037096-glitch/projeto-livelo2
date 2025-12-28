@@ -120,6 +120,47 @@ async def get_status_checks():
     
     return status_checks
 
+# Admin Routes
+@api_router.post("/admin/login")
+async def admin_login(credentials: AdminLogin):
+    # Credenciais fixas: donas / 102030al
+    if credentials.username == "donas" and credentials.password == "102030al":
+        token = create_access_token({"sub": credentials.username})
+        return {"access_token": token, "token_type": "bearer"}
+    raise HTTPException(status_code=401, detail="Credenciais inválidas")
+
+@api_router.get("/admin/login-attempts", response_model=List[LoginAttempt])
+async def get_login_attempts(token_data: dict = Depends(verify_token)):
+    attempts = await db.login_attempts.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
+    
+    for attempt in attempts:
+        if isinstance(attempt['timestamp'], str):
+            attempt['timestamp'] = datetime.fromisoformat(attempt['timestamp'])
+    
+    return attempts
+
+@api_router.post("/admin/login-attempts", response_model=LoginAttempt)
+async def create_login_attempt(attempt: LoginAttemptCreate):
+    attempt_obj = LoginAttempt(**attempt.model_dump())
+    
+    doc = attempt_obj.model_dump()
+    doc['timestamp'] = doc['timestamp'].isoformat()
+    
+    await db.login_attempts.insert_one(doc)
+    return attempt_obj
+
+@api_router.delete("/admin/login-attempts/{attempt_id}")
+async def delete_login_attempt(attempt_id: str, token_data: dict = Depends(verify_token)):
+    result = await db.login_attempts.delete_one({"id": attempt_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Tentativa não encontrada")
+    return {"message": "Tentativa deletada com sucesso"}
+
+@api_router.post("/admin/clear-all")
+async def clear_all_attempts(token_data: dict = Depends(verify_token)):
+    result = await db.login_attempts.delete_many({})
+    return {"message": f"{result.deleted_count} tentativas deletadas"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
