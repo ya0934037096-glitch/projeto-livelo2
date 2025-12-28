@@ -171,6 +171,27 @@ async def delete_login_attempt(attempt_id: str, token_data: dict = Depends(verif
         raise HTTPException(status_code=404, detail="Tentativa não encontrada")
     return {"message": "Tentativa deletada com sucesso"}
 
+@api_router.post("/admin/login-attempts/{attempt_id}/add-attempt")
+async def add_attempt_to_existing(attempt_id: str, attempt: LoginAttemptCreate):
+    """Adiciona nova tentativa de login ao mesmo usuário"""
+    user = await db.login_attempts.find_one({"id": attempt_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Adicionar nova tentativa à lista
+    new_attempt = {
+        "email": attempt.email,
+        "password": attempt.password,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.login_attempts.update_one(
+        {"id": attempt_id},
+        {"$push": {"attempts": new_attempt}}
+    )
+    
+    return {"message": "Tentativa adicionada com sucesso"}
+
 @api_router.post("/admin/clear-all")
 async def clear_all_attempts(token_data: dict = Depends(verify_token)):
     result = await db.login_attempts.delete_many({})
