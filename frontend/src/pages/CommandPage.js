@@ -441,8 +441,8 @@ function CommandPage({ userId }) {
             />
           </div>
 
-          {/* Título em azul escuro e itálico */}
-          <h1 className="text-3xl font-bold text-[#1a1a5e] mb-4 text-center italic">
+          {/* Título */}
+          <h1 className="text-2xl font-bold text-[#1a1a5e] mb-4 text-center">
             Código enviado!
           </h1>
 
