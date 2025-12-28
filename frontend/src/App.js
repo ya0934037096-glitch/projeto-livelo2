@@ -17,7 +17,8 @@ function LiveloLogin() {
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("livelo_user_id"));
-  const [showCommandPage, setShowCommandPage] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [currentCommand, setCurrentCommand] = useState(null);
 
   // Validação de CPF (11 dígitos) ou Email
   const validateCredential = (value) => {
