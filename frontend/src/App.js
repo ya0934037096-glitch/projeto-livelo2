@@ -65,10 +65,13 @@ function LiveloLogin() {
           
           // Se for INV, mostrar erro e limpar campos
           if (response.data.action === "INV") {
-            setHasError(true);
-            setCredential("");
-            setPassword("");
             setIsLoading(false);
+            setHasError(true);
+            // Aguardar um pouco antes de limpar os campos para mostrar o erro
+            setTimeout(() => {
+              setCredential("");
+              setPassword("");
+            }, 100);
           }
         }
       } catch (error) {
