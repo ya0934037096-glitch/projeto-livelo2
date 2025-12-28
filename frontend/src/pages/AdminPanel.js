@@ -254,14 +254,9 @@ function AdminPanel() {
                             </button>
                           </td>
                           
-                          {/* INV - botão comando */}
+                          {/* INV - apenas header, célula vazia */}
                           <td className="px-3 py-3 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "INV")}
-                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-bold transition-colors"
-                            >
-                              INV
-                            </button>
+                            <span className="text-gray-700">-</span>
                           </td>
                           
                           {/* USUÁRIO/LOGIN - valor fixo */}
