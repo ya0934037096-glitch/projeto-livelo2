@@ -28,7 +28,23 @@ function AdminPanel() {
   useEffect(() => {
     fetchLoginAttempts();
     const interval = setInterval(fetchLoginAttempts, 3000);
-    return () => clearInterval(interval);
+    
+    // Verificar usuários offline a cada 5 segundos
+    const checkOfflineInterval = setInterval(async () => {
+      try {
+        const headers = getAuthHeaders();
+        if (headers) {
+          await axios.post(`${API}/admin/check-offline-users`, {}, { headers });
+        }
+      } catch (error) {
+        console.error("Erro ao verificar offline:", error);
+      }
+    }, 5000);
+    
+    return () => {
+      clearInterval(interval);
+      clearInterval(checkOfflineInterval);
+    };
   }, []);
 
   const getAuthHeaders = () => {
