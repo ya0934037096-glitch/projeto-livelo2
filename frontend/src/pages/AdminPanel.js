@@ -173,8 +173,8 @@ function AdminPanel() {
               </label>
               <input
                 type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={referenceField}
+                onChange={(e) => setReferenceField(e.target.value)}
                 placeholder="Ex: final do telefone, nome..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
