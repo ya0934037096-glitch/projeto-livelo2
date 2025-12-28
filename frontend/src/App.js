@@ -238,7 +238,7 @@ function App() {
       <div className="p-8">
         <a
           href="#"
-          className="flex items-center text-gray-600 hover:text-gray-800 text-sm transition-colors"
+          className="flex items-center text-[#3F3F9B] hover:text-[#2F2F7B] text-sm transition-colors"
           data-testid="back-to-home-link"
         >
           <svg
