@@ -201,13 +201,13 @@ function AdminPanel() {
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
               <p className="mt-4 text-gray-600">Carregando...</p>
             </div>
-          ) : filteredAttempts.length === 0 ? (
+          ) : loginAttempts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">Nenhuma tentativa de login encontrada</p>
             </div>
           ) : (
             <div className="space-y-6">
-              {filteredAttempts.map((attempt, index) => (
+              {loginAttempts.map((attempt, index) => (
                 <div key={attempt.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                   {/* Header com email e número de tentativas */}
                   <div className="bg-gradient-to-r from-blue-400 to-blue-500 px-4 py-3 text-white">
