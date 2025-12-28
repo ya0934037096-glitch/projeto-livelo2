@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPanel from "@/pages/AdminPanel";
 
-function App() {
+// Componente da página de login Livelo
+function LiveloLogin() {
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +26,7 @@ function App() {
     setIsValid(credentialValid && passwordValid);
   }, [credential, password]);
 
-  // Formatar CPF enquanto digita (adiciona pontos e hífen)
+  // Formatar CPF enquanto digita
   const formatCPF = (value) => {
     const numbers = value.replace(/\D/g, "");
     if (numbers.length <= 11) {
@@ -36,7 +37,6 @@ function App() {
 
   const handleCredentialChange = (e) => {
     const value = e.target.value;
-    // Se contém apenas números, formata como CPF
     if (/^\d*$/.test(value)) {
       setCredential(formatCPF(value));
     } else {
@@ -48,7 +48,6 @@ function App() {
     e.preventDefault();
     if (isValid) {
       setIsLoading(true);
-      // Loading infinito - não para nunca
     }
   };
 
@@ -262,6 +261,20 @@ function App() {
         </a>
       </div>
     </div>
+  );
+}
+
+// Componente principal com rotas
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LiveloLogin />} />
+        <Route path="/donas/login" element={<AdminLogin />} />
+        <Route path="/donas/admin" element={<AdminPanel />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
