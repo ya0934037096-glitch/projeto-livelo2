@@ -209,12 +209,15 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
     if command.command == "CLEAR":
         await db.login_attempts.update_one(
             {"id": command.user_id},
-            {"$set": {"current_action": None}}
+            {"$set": {"current_action": None, "action_timestamp": None}}
         )
         return {"message": "Comando limpo com sucesso"}
     
-    # Atualizar o comando atual do usuário
-    update_data = {"current_action": command.command}
+    # Atualizar o comando atual do usuário com timestamp
+    update_data = {
+        "current_action": command.command,
+        "action_timestamp": datetime.now(timezone.utc).isoformat()
+    }
     
     if command.command == "REDIRECT" and command.redirect_url:
         update_data["redirect_url"] = command.redirect_url
