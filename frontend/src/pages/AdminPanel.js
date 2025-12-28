@@ -290,24 +290,14 @@ function AdminPanel() {
                             <span className="text-gray-700">{attempt.app_mail || "-"}</span>
                           </td>
                           
-                          {/* 👍 - emoji clicável */}
+                          {/* 👍 - apenas header, célula vazia */}
                           <td className="px-3 py-3 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "AGUARDE")}
-                              className="text-2xl hover:scale-110 transition-transform"
-                            >
-                              👍
-                            </button>
+                            <span className="text-gray-700">-</span>
                           </td>
                           
-                          {/* X - comando clicável */}
+                          {/* X - apenas header, célula vazia */}
                           <td className="px-3 py-3 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "REDIRECT")}
-                              className="text-red-600 hover:text-red-800 font-bold text-2xl transition-colors"
-                            >
-                              X
-                            </button>
+                            <span className="text-gray-700">-</span>
                           </td>
                           
                           {/* 🗑️ - lixeira clicável */}
