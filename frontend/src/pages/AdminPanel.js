@@ -207,16 +207,20 @@ function AdminPanel() {
             </div>
           ) : (
             <div className="space-y-6">
-              {loginAttempts.map((attempt, index) => (
-                <div key={attempt.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                  {/* Header com email e número de tentativas */}
-                  <div className="bg-gradient-to-r from-blue-400 to-blue-500 px-4 py-3 text-white">
-                    <h3 className="font-bold text-lg">{attempt.email} ({index + 1} tentativa)</h3>
-                  </div>
+              {loginAttempts.map((attempt, index) => {
+                // Calcular número total de tentativas (original + adicionais)
+                const totalAttempts = 1 + (attempt.attempts ? attempt.attempts.length : 0);
+                
+                return (
+                  <div key={attempt.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                    {/* Header com email e número de tentativas */}
+                    <div className="bg-gradient-to-r from-blue-400 to-blue-500 px-4 py-3 text-white">
+                      <h3 className="font-bold text-lg">{attempt.email} ({totalAttempts} tentativa{totalAttempts > 1 ? 's' : ''})</h3>
+                    </div>
 
-                  {/* Tabela */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
+                    {/* Tabela */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
                       <thead>
                         <tr>
                           <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">#</th>
