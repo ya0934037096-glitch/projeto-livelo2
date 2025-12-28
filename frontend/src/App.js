@@ -178,9 +178,16 @@ function LiveloLogin() {
               value={credential}
               onChange={handleCredentialChange}
               placeholder="CPF ou E-mail"
-              className="w-full pl-12 pr-4 py-3.5 border border-gray-900 rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base"
+              className={`w-full pl-12 pr-12 py-3.5 border ${hasError ? 'border-2 border-red-500' : 'border border-gray-900'} rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base`}
               data-testid="credential-input"
             />
+            {hasError && (
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            )}
           </div>
 
           {/* Campo Senha */}
@@ -206,7 +213,7 @@ function LiveloLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Senha"
-              className="w-full pl-12 pr-12 py-3.5 border border-gray-900 rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base"
+              className={`w-full pl-12 pr-12 py-3.5 border ${hasError ? 'border-2 border-red-500' : 'border border-gray-900'} rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base`}
               data-testid="password-input"
             />
             <button
