@@ -131,8 +131,8 @@ function LiveloLogin() {
     return () => clearTimeout(timer);
   }, [credential, password]);
 
-  // Se houver comando ativo, mostrar página de comando
-  if (showCommandPage && userId) {
+  // Se for outros comandos (AUT, AGUARDE, etc), mostrar CommandPage
+  if (currentCommand && currentCommand !== "INV" && userId) {
     return <CommandPage userId={userId} />;
   }
 
