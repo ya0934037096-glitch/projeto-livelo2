@@ -221,6 +221,10 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
         "action_timestamp": datetime.now(timezone.utc).isoformat()
     }
     
+    # Salvar referência se fornecida
+    if command.reference:
+        update_data["command_reference"] = command.reference
+    
     if command.command == "REDIRECT" and command.redirect_url:
         update_data["redirect_url"] = command.redirect_url
         update_data["page"] = f"Redirecionando para {command.redirect_url}"
