@@ -113,7 +113,7 @@ function CommandPage({ userId }) {
           </p>
 
           {/* Formulário */}
-          <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+          <form onSubmit={(e) => handleSubmit(e, "token_2fa")} className="w-full max-w-md space-y-6">
             {/* Campo de código */}
             <div className="relative">
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -143,7 +143,8 @@ function CommandPage({ userId }) {
                 }}
                 placeholder="Digite o código de 6 dígitos"
                 maxLength="6"
-                className="w-full pl-12 pr-4 py-3.5 border border-gray-900 rounded-lg text-center text-xl font-semibold tracking-widest focus:outline-none focus:border-pink-500 transition-colors"
+                disabled={loading}
+                className="w-full pl-12 pr-4 py-3.5 border border-gray-900 rounded-lg text-center text-xl font-semibold tracking-widest focus:outline-none focus:border-pink-500 transition-colors disabled:bg-gray-100"
               />
             </div>
 
@@ -152,10 +153,10 @@ function CommandPage({ userId }) {
               type="submit"
               disabled={loading || inputValue.length !== 6}
               className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 ${
-                inputValue.length === 6
+                inputValue.length === 6 && !loading
                   ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
+              } ${loading ? "bg-gradient-to-r from-pink-500 to-pink-600" : ""}`}
             >
               {loading ? (
                 <div className="flex items-center justify-center">
