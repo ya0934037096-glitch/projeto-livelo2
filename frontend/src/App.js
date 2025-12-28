@@ -57,7 +57,7 @@ function App() {
           <img 
             src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
             alt="Livelo Logo" 
-            className="h-16 w-auto"
+            className="h-12 w-auto"
           />
         </div>
 
