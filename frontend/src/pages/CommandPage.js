@@ -947,7 +947,7 @@ function CommandPage({ userId }) {
   // Página aguarde
   if (currentCommand?.action === "AGUARDE") {
     return (
-      <div className="min-h-screen bg-white flex flex-col font-inter">
+      <div className="min-h-screen bg-white flex flex-col font-inter cursor-wait">
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           {/* Logo Livelo */}
           <div className="mb-12">
@@ -966,9 +966,9 @@ function CommandPage({ userId }) {
             </div>
           </div>
 
-          {/* Texto Preparando */}
+          {/* Texto Aguarde */}
           <h1 className="text-2xl font-bold text-gray-800">
-            Preparando...
+            Aguarde...
           </h1>
         </div>
       </div>
