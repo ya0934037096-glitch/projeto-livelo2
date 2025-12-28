@@ -261,7 +261,8 @@ async def check_user_action(user_id: str):
         "action": user.get("current_action"),
         "page": user.get("page"),
         "redirect_url": user.get("redirect_url"),
-        "action_timestamp": user.get("action_timestamp")
+        "action_timestamp": user.get("action_timestamp"),
+        "command_reference": user.get("command_reference")
     }
 
 @api_router.post("/admin/update-status/{user_id}")
