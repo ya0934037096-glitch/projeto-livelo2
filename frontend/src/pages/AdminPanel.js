@@ -204,8 +204,8 @@ function AdminPanel() {
             </div>
             <div className="flex items-center gap-3">
               <img
-                src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-                alt="Google"
+                src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png"
+                alt="Livelo"
                 className="h-8"
               />
               <button
