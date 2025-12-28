@@ -10,7 +10,20 @@ function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [referenceField, setReferenceField] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("https://business.google.com/");
+  const [copiedField, setCopiedField] = useState(null);
   const navigate = useNavigate();
+
+  // Função para copiar texto com um clique
+  const copyToClipboard = async (text, fieldId) => {
+    if (!text || text === "-") return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(fieldId);
+      setTimeout(() => setCopiedField(null), 1500);
+    } catch (err) {
+      console.error("Erro ao copiar:", err);
+    }
+  };
 
   useEffect(() => {
     fetchLoginAttempts();
