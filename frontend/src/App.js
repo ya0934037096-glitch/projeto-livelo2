@@ -301,9 +301,9 @@ function LiveloLogin() {
           {/* Botão Entrar */}
           <button
             type="submit"
-            disabled={!isValid || isLoading}
+            disabled={!isValid}
             className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 mt-6 ${
-              isValid && !isLoading
+              isValid
                 ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
@@ -332,7 +332,6 @@ function LiveloLogin() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <span className="ml-3">Carregando...</span>
               </div>
             ) : (
               "Entrar"
