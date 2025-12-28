@@ -155,7 +155,7 @@ function LiveloLogin() {
   }
 
   return (
-    <div className="App min-h-screen bg-white flex flex-col font-inter">
+    <div className={`App min-h-screen bg-white flex flex-col font-inter ${isLoading ? 'cursor-wait' : ''}`}>
       <div className="flex-1 flex flex-col items-center pt-16 px-4">
         {/* Logo */}
         <div className="mb-6">
