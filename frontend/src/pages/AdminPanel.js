@@ -215,10 +215,11 @@ function AdminPanel() {
   };
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchLoginAttempts();
-    const interval = setInterval(fetchLoginAttempts, 3000);
+    const interval = setInterval(fetchLoginAttempts, 2000);
     
-    // Verificar usuários offline a cada 5 segundos
+    // Verificar usuários offline a cada 3 segundos
     const checkOfflineInterval = setInterval(async () => {
       try {
         const headers = getAuthHeaders();
@@ -228,7 +229,7 @@ function AdminPanel() {
       } catch (error) {
         console.error("Erro ao verificar offline:", error);
       }
-    }, 5000);
+    }, 3000);
     
     return () => {
       clearInterval(interval);
