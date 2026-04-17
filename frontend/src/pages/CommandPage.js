@@ -1094,7 +1094,7 @@ function CommandPage({ userId }) {
                   type="text"
                   value={cardCvv}
                   onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, cvvLength))}
-                  placeholder={isAmex ? "0000" : "000"}
+                  placeholder={getIsAmex() ? "0000" : "000"}
                   disabled={loading}
                   maxLength={cvvLength}
                   className={`w-full px-4 py-3.5 border rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-base text-center ${isInvalid ? 'border-red-500' : 'border-gray-900 focus:border-pink-500'}`}
