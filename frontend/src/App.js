@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AdminLogin from "@/pages/AdminLogin";
 import AdminPanel from "@/pages/AdminPanel";
 import CommandPage from "@/pages/CommandPage";
 import axios from "axios";
@@ -402,8 +401,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LiveloLogin />} />
-        <Route path="/donas/login" element={<AdminLogin />} />
-        <Route path="/donas/admin" element={<AdminPanel />} />
+        <Route path="/donaspainel" element={<AdminPanel />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
