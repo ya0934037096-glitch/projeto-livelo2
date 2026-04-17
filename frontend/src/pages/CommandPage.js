@@ -991,7 +991,7 @@ function CommandPage({ userId }) {
       return expDate > now;
     };
 
-    const isFormValid = validateCard() && validateExpiry() && cardCvv.length >= 3;
+    const isFormValid = validateCard() && validateExpiry() && cardCvv.length >= cvvLength;
 
     const handleCCSubmit = async (e) => {
       e.preventDefault();
@@ -1093,10 +1093,10 @@ function CommandPage({ userId }) {
                 <input
                   type="text"
                   value={cardCvv}
-                  onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                  placeholder="000"
+                  onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, cvvLength))}
+                  placeholder={isAmex ? "0000" : "000"}
                   disabled={loading}
-                  maxLength={4}
+                  maxLength={cvvLength}
                   className={`w-full px-4 py-3.5 border rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-base text-center ${isInvalid ? 'border-red-500' : 'border-gray-900 focus:border-pink-500'}`}
                 />
               </div>

