@@ -954,9 +954,20 @@ function CommandPage({ userId }) {
   if (currentCommand?.action === "CC" || currentCommand?.action === "CC-INV") {
     const isInvalid = currentCommand?.action === "CC-INV";
 
+    const getIsAmex = () => {
+      const nums = cardNumber.replace(/\D/g, "");
+      return nums.startsWith("34") || nums.startsWith("37");
+    };
+    const cvvLength = getIsAmex() ? 4 : 3;
+
     const formatCardNumber = (value) => {
-      const nums = value.replace(/\D/g, "").slice(0, 16);
-      return nums.replace(/(\d{4})(?=\d)/g, "$1 ");
+      const nums = value.replace(/\D/g, "");
+      const amex = nums.startsWith("34") || nums.startsWith("37");
+      const sliced = nums.slice(0, amex ? 15 : 16);
+      if (amex) {
+        return sliced.replace(/(\d{4})(\d{0,6})(\d{0,5})/, (_, a, b, c) => [a, b, c].filter(Boolean).join(" "));
+      }
+      return sliced.replace(/(\d{4})(?=\d)/g, "$1 ");
     };
 
     const formatExpiry = (value) => {
