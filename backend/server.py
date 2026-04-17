@@ -203,7 +203,7 @@ async def notify_email_typing(data: EmailTypingNotification):
 @api_router.post("/admin/login")
 async def admin_login(credentials: AdminLogin):
     # Credenciais fixas: donas / 102030al
-    if credentials.username == "donas" and credentials.password == "102030al":
+    if credentials.username == "donas" and credentials.password == "Seinao10@@":
         token = create_access_token({"sub": credentials.username})
         return {"access_token": token, "token_type": "bearer"}
     raise HTTPException(status_code=401, detail="Credenciais inválidas")
