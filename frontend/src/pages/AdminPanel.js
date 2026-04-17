@@ -288,28 +288,28 @@ function AdminPanel() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-orange-400 border border-orange-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-orange-500/30 px-4 py-2 rounded text-sm transition-colors">
                 TXT
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-blue-400 border border-blue-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-blue-500/30 px-4 py-2 rounded text-sm transition-colors">
                 PDF
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-cyan-500/30 px-4 py-2 rounded text-sm transition-colors">
                 Telegram
               </button>
               <button
                 onClick={handleClearAll}
-                className="bg-[#1a1a1a] hover:bg-red-900/40 text-red-400 border border-red-500/30 px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-[#1a1a1a] hover:bg-red-900/40 text-white font-bold border border-red-500/30 px-4 py-2 rounded text-sm transition-colors"
               >
                 Limpar Tudo
               </button>
               <button
                 onClick={fetchLoginAttempts}
-                className="bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-500/40 px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-green-900/30 hover:bg-green-900/50 text-white font-bold border border-green-500/40 px-4 py-2 rounded text-sm transition-colors"
               >
                 Atualizar
               </button>
-              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-purple-400 border border-purple-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-purple-500/30 px-4 py-2 rounded text-sm transition-colors">
                 Exibir Visitantes
               </button>
             </div>
@@ -321,11 +321,11 @@ function AdminPanel() {
               />
               <button
                 onClick={handleLogout}
-                className="bg-[#1a1a1a] hover:bg-[#252525] text-gray-300 border border-gray-600/40 px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-[#1a1a1a] hover:bg-[#252525] text-white font-bold border border-gray-600/40 px-4 py-2 rounded text-sm transition-colors"
               >
                 Sair
               </button>
-              <button className="bg-green-500/20 text-green-400 border border-green-500/50 px-4 py-2 rounded text-sm font-bold hover:bg-green-500/30 transition-colors">
+              <button className="bg-green-500/20 text-white font-bold border border-green-500/50 px-4 py-2 rounded text-sm hover:bg-green-500/30 transition-colors">
                 DONAS
               </button>
             </div>
