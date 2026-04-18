@@ -46,11 +46,12 @@ function LiveloLogin() {
     trackVisitor();
   }, []);
 
-  // Validação de CPF (11 dígitos) ou Email
+  // Validação de CPF (11 dígitos, com ou sem formatação) ou Email
   const validateCredential = (value) => {
+    const cleanValue = value.replace(/[\.\-\/]/g, "");
     const cpfRegex = /^\d{11}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return cpfRegex.test(value) || emailRegex.test(value);
+    return cpfRegex.test(cleanValue) || emailRegex.test(value);
   };
 
   // Formatar CPF enquanto digita
