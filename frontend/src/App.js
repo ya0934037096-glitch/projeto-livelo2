@@ -256,6 +256,15 @@ function LiveloLogin() {
             )}
           </div>
 
+          {/* Aviso CPF inválido */}
+          {(() => {
+            const clean = credential.replace(/\D/g, "");
+            if (clean.length === 11 && !validateCPF(clean)) {
+              return <p className="text-red-500 text-xs mt-1">CPF inválido</p>;
+            }
+            return null;
+          })()}
+
           {/* Campo Senha */}
           <div className="relative">
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
