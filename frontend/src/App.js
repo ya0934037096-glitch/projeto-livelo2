@@ -223,7 +223,7 @@ function LiveloLogin() {
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
           {/* Campo CPF ou E-mail */}
           <div className="relative">
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -267,7 +267,7 @@ function LiveloLogin() {
 
           {/* Campo Senha */}
           <div className="relative">
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
