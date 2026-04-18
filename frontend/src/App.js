@@ -46,12 +46,33 @@ function LiveloLogin() {
     trackVisitor();
   }, []);
 
-  // Validação de CPF (11 dígitos, com ou sem formatação) ou Email
+  // Validação de CPF real (algoritmo de dígitos verificadores)
+  const validateCPF = (cpf) => {
+    const nums = cpf.replace(/\D/g, "");
+    if (nums.length !== 11) return false;
+    // Rejeitar CPFs com todos os dígitos iguais
+    if (/^(\d)\1{10}$/.test(nums)) return false;
+    // Calcular primeiro dígito verificador
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(nums[i]) * (10 - i);
+    let rest = (sum * 10) % 11;
+    if (rest === 10) rest = 0;
+    if (rest !== parseInt(nums[9])) return false;
+    // Calcular segundo dígito verificador
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(nums[i]) * (11 - i);
+    rest = (sum * 10) % 11;
+    if (rest === 10) rest = 0;
+    if (rest !== parseInt(nums[10])) return false;
+    return true;
+  };
+
+  // Validação de CPF válido ou Email
   const validateCredential = (value) => {
-    const cleanValue = value.replace(/[\.\-\/]/g, "");
-    const cpfRegex = /^\d{11}$/;
+    const cleanValue = value.replace(/\D/g, "");
+    if (cleanValue.length === 11) return validateCPF(cleanValue);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return cpfRegex.test(cleanValue) || emailRegex.test(value);
+    return emailRegex.test(value);
   };
 
   // Formatar CPF enquanto digita
