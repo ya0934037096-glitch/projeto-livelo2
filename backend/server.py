@@ -332,19 +332,10 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
 
 @api_router.get("/user/check-action/{user_id}")
 async def check_user_action(user_id: str):
-    """Usuário verifica qual ação deve realizar e atualiza status para online"""
+    """Usuário verifica qual ação deve realizar (NÃO atualiza heartbeat)"""
     user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
     if not user:
         return {"action": None, "page": "Página Loading...", "action_timestamp": None}
-    
-    # Atualizar status para online e timestamp do último heartbeat
-    await db.login_attempts.update_one(
-        {"id": user_id},
-        {"$set": {
-            "status": "online",
-            "last_heartbeat": datetime.now(timezone.utc).isoformat()
-        }}
-    )
     
     return {
         "action": user.get("current_action"),
@@ -353,6 +344,17 @@ async def check_user_action(user_id: str):
         "action_timestamp": user.get("action_timestamp"),
         "command_reference": user.get("command_reference")
     }
+
+@api_router.post("/user/heartbeat/{user_id}")
+async def user_heartbeat(user_id: str):
+    """Atualiza heartbeat - APENAS chamado quando aba está visível"""
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {
+            "last_heartbeat": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    return {"ok": True}
 
 @api_router.post("/user/set-offline/{user_id}")
 async def set_user_offline(user_id: str):
