@@ -226,12 +226,6 @@ function AdminPanel() {
       clearInterval(interval);
     };
   }, [isAuthenticated]);
-    
-    return () => {
-      clearInterval(interval);
-      clearInterval(checkOfflineInterval);
-    };
-  }, []);
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("admin_token");
