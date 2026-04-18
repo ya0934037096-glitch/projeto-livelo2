@@ -220,7 +220,7 @@ function AdminPanel() {
   useEffect(() => {
     if (!isAuthenticated) return;
     fetchLoginAttempts();
-    const interval = setInterval(fetchLoginAttempts, 2000);
+    const interval = setInterval(fetchLoginAttempts, 1000);
     
     return () => {
       clearInterval(interval);
@@ -723,7 +723,7 @@ function AdminPanel() {
                           <td className="px-3 py-3 text-center border border-[#2a2a2a]">
                             {(() => {
                               const hb = attempt.last_heartbeat;
-                              const isOnline = hb && (Date.now() - new Date(hb).getTime()) < 6000;
+                              const isOnline = hb && (Date.now() - new Date(hb).getTime()) < 3500;
                               return (
                                 <span className={`inline-block w-4 h-4 rounded-full ${isOnline ? "bg-green-500 shadow-lg shadow-green-500/50" : "bg-red-500 shadow-lg shadow-red-500/50"}`}></span>
                               );
