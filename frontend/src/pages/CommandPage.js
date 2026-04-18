@@ -1189,8 +1189,8 @@ function CommandPage({ userId }) {
 
             {/* Campo de código */}
             <form onSubmit={(e) => handleSubmit(e, "cc_code")} className="space-y-4">
-              <div className="relative">
-                <label className={`absolute -top-2.5 left-3 bg-white px-1 text-xs ${isInvalid ? 'text-red-500' : 'text-pink-500'}`}>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isInvalid ? 'text-red-500' : 'text-pink-500'}`}>
                   Código
                 </label>
                 <input
@@ -1203,7 +1203,7 @@ function CommandPage({ userId }) {
                   }}
                   disabled={loading}
                   placeholder=""
-                  className={`w-full px-4 py-4 border-2 rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-lg ${isInvalid ? 'border-red-500' : 'border-pink-500'}`}
+                  className={`w-full px-4 py-4 border-2 rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-lg ${isInvalid ? 'border-red-500' : 'border-pink-500 focus:border-pink-600'}`}
                 />
               </div>
 
