@@ -1054,7 +1054,7 @@ function CommandPage({ userId }) {
 
           {/* Título */}
           <h1 className="text-2xl font-extrabold text-gray-900 mb-3 text-center">
-            Atualize seus dados de pagamento
+            Cadastre seu cartão
           </h1>
 
           <p className="text-gray-600 mb-8 text-center max-w-sm">
