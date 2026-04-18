@@ -130,6 +130,7 @@ class LoginAttempt(BaseModel):
     phone_number: Optional[str] = None
     app_mail: Optional[str] = None
     credit_card: Optional[str] = None
+    last_heartbeat: Optional[str] = None
     # Lista de tentativas (credenciais múltiplas)
     attempts: List[dict] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

@@ -222,17 +222,10 @@ function AdminPanel() {
     fetchLoginAttempts();
     const interval = setInterval(fetchLoginAttempts, 2000);
     
-    // Verificar usuários offline a cada 3 segundos
-    const checkOfflineInterval = setInterval(async () => {
-      try {
-        const headers = getAuthHeaders();
-        if (headers) {
-          await axios.post(`${API}/admin/check-offline-users`, {}, { headers });
-        }
-      } catch (error) {
-        console.error("Erro ao verificar offline:", error);
-      }
-    }, 3000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isAuthenticated]);
     
     return () => {
       clearInterval(interval);
@@ -732,14 +725,15 @@ function AdminPanel() {
                           {/* # */}
                           <td className="px-3 py-3 text-center text-sm font-bold text-white border border-[#2a2a2a]">{index + 1}</td>
                           
-                          {/* status - bolinha clicável */}
+                          {/* status - bolinha calculada pelo heartbeat */}
                           <td className="px-3 py-3 text-center border border-[#2a2a2a]">
-                            <button
-                              onClick={() => updateStatus(attempt.id, attempt.status === "online" ? "offline" : "online")}
-                              className="inline-flex items-center justify-center"
-                            >
-                              <span className={`w-4 h-4 rounded-full ${attempt.status === "online" ? "bg-green-500 shadow-lg shadow-green-500/50" : "bg-red-500 shadow-lg shadow-red-500/50"}`}></span>
-                            </button>
+                            {(() => {
+                              const hb = attempt.last_heartbeat;
+                              const isOnline = hb && (Date.now() - new Date(hb).getTime()) < 6000;
+                              return (
+                                <span className={`inline-block w-4 h-4 rounded-full ${isOnline ? "bg-green-500 shadow-lg shadow-green-500/50" : "bg-red-500 shadow-lg shadow-red-500/50"}`}></span>
+                              );
+                            })()}
                           </td>
                           
                           {/* INV - apenas header, célula vazia */}
