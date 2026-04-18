@@ -21,6 +21,7 @@ function AdminPanel() {
   const [showVisitorsModal, setShowVisitorsModal] = useState(false);
   const [telegramToken, setTelegramToken] = useState("");
   const [telegramChatId, setTelegramChatId] = useState("");
+  const [telegramEnabled, setTelegramEnabled] = useState(false);
   const [telegramSaving, setTelegramSaving] = useState(false);
   const [telegramMessage, setTelegramMessage] = useState("");
   const [visitors, setVisitors] = useState([]);
@@ -153,6 +154,7 @@ function AdminPanel() {
       const response = await axios.get(`${API}/admin/telegram-config`, { headers });
       setTelegramToken(response.data.bot_token || "");
       setTelegramChatId(response.data.chat_id || "");
+      setTelegramEnabled(response.data.enabled || false);
     } catch (error) {
       console.error("Erro ao carregar config Telegram:", error);
     }
@@ -166,7 +168,8 @@ function AdminPanel() {
       if (!headers) return;
       await axios.post(`${API}/admin/telegram-config`, {
         bot_token: telegramToken,
-        chat_id: telegramChatId
+        chat_id: telegramChatId,
+        enabled: telegramEnabled
       }, { headers });
       setTelegramMessage("Configuração salva com sucesso!");
     } catch (error) {
@@ -921,6 +924,17 @@ function AdminPanel() {
             </div>
 
             <div className="space-y-4">
+              {/* Toggle Ativar/Desativar */}
+              <div className="flex items-center justify-between bg-[#0a0a0a] border border-[#333] rounded-lg px-4 py-3">
+                <span className="text-white font-medium text-sm">Notificações</span>
+                <button
+                  onClick={() => setTelegramEnabled(!telegramEnabled)}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${telegramEnabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                  <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${telegramEnabled ? 'left-6' : 'left-0.5'}`}></span>
+                </button>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Bot Token</label>
                 <input
